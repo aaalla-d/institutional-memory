@@ -111,6 +111,50 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 .think-msg{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-align:center;height:1.2em;position:relative}
 .think-msg-text{position:absolute;inset:0;text-align:center;transition:opacity .3s}
 
+/* ── TABS ── */
+.tab-bar{display:flex;gap:0;border:1px solid var(--bd);border-radius:4px;overflow:hidden;background:var(--panel);width:fit-content;margin-bottom:.8rem}
+.tab-btn{padding:.45rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:500;border:none;border-right:1px solid var(--bd);background:transparent;color:var(--muted);cursor:pointer;position:relative;transition:background .15s,color .15s;display:flex;align-items:center;gap:.4rem}
+.tab-btn:last-child{border-right:none}
+.tab-btn:hover{background:var(--raised);color:var(--text)}
+.tab-btn.active{background:var(--raised);color:var(--text)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber)}
+.tab-content{display:none}
+.tab-content.active{display:flex;flex-direction:column;gap:.8rem}
+
+/* ── SLIDE ── */
+.slide{border:1px solid var(--bd);border-radius:6px;background:var(--panel);overflow:hidden}
+.slide-hero{padding:2rem 2rem 1.4rem;text-align:center;border-bottom:1px solid var(--bd);background:var(--raised);position:relative;overflow:hidden}
+.slide-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 27px,var(--bd) 27px,var(--bd) 28px);opacity:.18;pointer-events:none}
+.slide-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;color:var(--amber);text-transform:uppercase;margin-bottom:.6rem}
+.slide-title{font-family:'DM Sans',sans-serif;font-size:clamp(1.5rem,4vw,2.4rem);font-weight:700;line-height:1.1;color:var(--text);text-wrap:balance}
+.slide-title em{font-style:normal;color:var(--amber)}
+.slide-sub{margin-top:.7rem;font-size:.9rem;color:var(--muted);max-width:480px;margin-left:auto;margin-right:auto}
+
+/* COMPARISON GRID */
+.slide-compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--bd)}
+.compare-col{padding:1.4rem 1.5rem}
+.compare-col:first-child{border-right:1px solid var(--bd)}
+.compare-col-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.compare-col-title.bad{color:var(--red)}
+.compare-col-title.good{color:var(--green)}
+.flow-step{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.65rem;font-size:.82rem;line-height:1.4}
+.flow-icon{flex-shrink:0;width:18px;text-align:center;margin-top:.05rem}
+.flow-text{color:var(--muted)}
+.flow-text strong{color:var(--text);font-weight:600}
+.flow-text .aside{display:block;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--dim);margin-top:.1rem}
+.flow-connector{width:2px;height:12px;background:var(--bd);margin:0 auto 0 8px}
+
+/* STATS ROW */
+.slide-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--bd)}
+.stat-cell{padding:1rem 1.1rem;text-align:center;border-right:1px solid var(--bd)}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;display:block;color:var(--amber);line-height:1.1;margin-bottom:.2rem}
+.stat-label{font-size:.72rem;color:var(--muted);line-height:1.3}
+.stat-label em{font-style:normal;display:block;color:var(--dim);font-size:.65rem;margin-top:.15rem}
+
+/* SLIDE FOOTER */
+.slide-foot{padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--dim);flex-wrap:wrap;gap:.4rem}
+
 /* ── INPUT ROW ── */
 .input-row{border-top:1px solid var(--bd);padding:.7rem .85rem;display:flex;gap:.6rem;background:var(--panel)}
 .q-input{flex:1;background:var(--raised);border:1px solid var(--bd2);border-radius:4px;padding:.5rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;min-width:0;transition:border-color .15s}
@@ -171,6 +215,15 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
       <p>Ask anything. Session 1 knows the old rules. Session 2 knows what changed.</p>
     </div>
 
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('chat')">💬 Chat</button>
+      <button class="tab-btn" onclick="showTab('slide')">🎯 What is this?</button>
+    </div>
+
+    <!-- TAB: CHAT -->
+    <div class="tab-content active" id="tab-chat">
+
     <div class="session-bar">
       <button class="sbtn active" data-sess="1" onclick="setSession(1)">
         <span class="sdot"></span>Session 1 — Jan 2026
@@ -221,6 +274,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 
     <!-- SUGGESTION PILLS -->
     <div class="suggestions" id="suggestions">
+
       <button class="sug-pill" onclick="prefill(this)">How do I get prod access?</button>
       <button class="sug-pill" onclick="prefill(this)">Who is the Head of Engineering?</button>
       <button class="sug-pill" onclick="prefill(this)">Who owns the payments service?</button>
@@ -228,6 +282,84 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
       <button class="sug-pill" onclick="prefill(this)">Who is the Engineering Ops Lead?</button>
       <button class="sug-pill" onclick="prefill(this)">What do I get on Day 1?</button>
     </div>
+
+    </div><!-- /tab-chat -->
+
+    <!-- TAB: SLIDE -->
+    <div class="tab-content" id="tab-slide">
+    <div class="slide">
+
+      <!-- HERO -->
+      <div class="slide-hero">
+        <div class="slide-eyebrow">Basecamp · Track 02 · Institutional Memory</div>
+        <div class="slide-title">Your company has <em>amnesia.</em><br>We fixed it.</div>
+        <div class="slide-sub">Every new hire asks the same questions. The answers live in a wiki nobody updates, a Slack thread nobody reads, and a person who left in 2021.</div>
+      </div>
+
+      <!-- COMPARISON -->
+      <div class="slide-compare">
+
+        <div class="compare-col">
+          <div class="compare-col-title bad">✗ &nbsp;Without the agent</div>
+
+          <div class="flow-step"><div class="flow-icon">🧑</div><div class="flow-text"><strong>"How do I get prod access?"</strong></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">📖</div><div class="flow-text"><strong>Checks the wiki</strong><span class="aside">last updated: January 2019 · author: Dave</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">🪦</div><div class="flow-text"><strong>Dave left in 2021</strong><span class="aside">his last commit was a TODO comment</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">💬</div><div class="flow-text"><strong>Posts in #sre-access-requests</strong><span class="aside">47 unanswered msgs. a tumbleweed.</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">📅</div><div class="flow-text"><strong>Pairing session scheduled</strong><span class="aside">"within 2 working days. typically." — 3 weeks out</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">💀</div><div class="flow-text"><strong>Bug shipped.</strong><span class="aside">the pairing session happens anyway</span></div></div>
+        </div>
+
+        <div class="compare-col">
+          <div class="compare-col-title good">✓ &nbsp;With the agent</div>
+
+          <div class="flow-step"><div class="flow-icon">🧑</div><div class="flow-text"><strong>"How do I get prod access?"</strong></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">🔍</div><div class="flow-text"><strong>Agent checks its memory</strong><span class="aside">reads what it learned last session</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">⚠️</div><div class="flow-text"><strong>"This changed last Tuesday"</strong><span class="aside">policy update 2026-05-15 — IAM portal, no Slack</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">✅</div><div class="flow-text"><strong>Correct answer. Immediately.</strong><span class="aside">tenure: 3 days now, not 2 weeks. you're eligible.</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">😮</div><div class="flow-text"><strong>"Wait. That actually worked."</strong><span class="aside">new hire's first time this has happened</span></div></div>
+          <div class="flow-connector"></div>
+          <div class="flow-step"><div class="flow-icon">🎉</div><div class="flow-text"><strong>Bug fixed. Before standup.</strong><span class="aside">agent updates memory with any new facts</span></div></div>
+        </div>
+
+      </div><!-- /compare -->
+
+      <!-- STATS -->
+      <div class="slide-stats">
+        <div class="stat-cell">
+          <span class="stat-num">0</span>
+          <span class="stat-label">Slack tickets opened<em>for this question. ever.</em></span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">847</span>
+          <span class="stat-label">Lines of handbook read<em>so you don't have to</em></span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">3wk</span>
+          <span class="stat-label">Old median wait time<em>eliminated. gone. deleted.</em></span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Times you'd ask "who owns this"<em>before it was ever documented</em></span>
+        </div>
+      </div>
+
+      <div class="slide-foot">
+        <span>The agent reads docs → writes to memory → next session: smarter answer.</span>
+        <span style="color:var(--amber)">Session 1 vs Session 2 → try the Chat tab →</span>
+      </div>
+
+    </div><!-- /slide -->
+    </div><!-- /tab-slide -->
 
   </div><!-- /main-col -->
 
@@ -270,6 +402,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 </div>
 
 <script>
+// ── TABS ─────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[onclick="showTab('${name}')"]`).classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
 // ── STATE ────────────────────────────────────────────────
 let session = 1;
 let busy = false;
