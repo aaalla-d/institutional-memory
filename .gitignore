@@ -1,0 +1,15 @@
+# API secrets and agent IDs
+.env
+.agent_id
+.environment_id
+.memory_store_id
+
+# Session outputs (generated, not source)
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
