@@ -155,6 +155,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 /* SLIDE FOOTER */
 .slide-foot{padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--dim);flex-wrap:wrap;gap:.4rem}
 
+/* ARCH DIAGRAM */
+.arch-section{padding:1.4rem 1.8rem 1.8rem;border-bottom:1px solid var(--bd)}
+.arch-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:1.1rem;text-align:center}
+.arch-svg-wrap{max-width:640px;margin:0 auto;overflow-x:auto}
+.arch-svg-wrap svg{width:100%;min-width:420px;height:auto;display:block}
+
 /* ── INPUT ROW ── */
 .input-row{border-top:1px solid var(--bd);padding:.7rem .85rem;display:flex;gap:.6rem;background:var(--panel)}
 .q-input{flex:1;background:var(--raised);border:1px solid var(--bd2);border-radius:4px;padding:.5rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;min-width:0;transition:border-color .15s}
@@ -294,6 +300,115 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
         <div class="slide-eyebrow">Basecamp · Track 02 · Institutional Memory</div>
         <div class="slide-title">Your company has <em>amnesia.</em><br>We fixed it.</div>
         <div class="slide-sub">Every new hire asks the same questions. The answers live in a wiki nobody updates, a Slack thread nobody reads, and a person who left in 2021.</div>
+      </div>
+
+      <!-- ARCHITECTURE DIAGRAM -->
+      <div class="arch-section">
+        <div class="arch-eyebrow">↳ how it works</div>
+        <div class="arch-svg-wrap">
+          <svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:420px;height:auto;display:block">
+
+            <!-- ── SOURCE DOC BOXES ── -->
+            <rect x="14" y="12" width="220" height="64" rx="5" style="fill:var(--raised);stroke:var(--bd);stroke-width:1.5"/>
+            <text x="34" y="36" style="fill:var(--text);font-size:11.5px;font-family:'DM Sans',sans-serif;font-weight:600">📄  Round 1 Docs</text>
+            <text x="34" y="52" style="fill:var(--muted);font-size:9.5px;font-family:'JetBrains Mono',monospace">onboarding-handbook · team-directory</text>
+            <text x="34" y="67" style="fill:var(--dim);font-size:9.5px;font-family:'JetBrains Mono',monospace">access-policy-2026-01 · 847 lines</text>
+
+            <rect x="406" y="12" width="220" height="64" rx="5" style="fill:var(--raised);stroke:var(--bd);stroke-width:1.5"/>
+            <text x="426" y="36" style="fill:var(--text);font-size:11.5px;font-family:'DM Sans',sans-serif;font-weight:600">📄  Round 2 Docs</text>
+            <text x="426" y="52" style="fill:var(--muted);font-size:9.5px;font-family:'JetBrains Mono',monospace">policy-update-2026-05-15 · re-org</text>
+            <text x="426" y="67" style="fill:var(--dim);font-size:9.5px;font-family:'JetBrains Mono',monospace">team-directory-update · changelog</text>
+
+            <!-- ── ARROWS: Docs → Sessions ── -->
+            <line x1="124" y1="77" x2="124" y2="117" style="stroke:var(--bd2);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="118,114 124,124 130,114" style="fill:var(--bd2)"/>
+            <line x1="516" y1="77" x2="516" y2="117" style="stroke:var(--bd2);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="510,114 516,124 522,114" style="fill:var(--bd2)"/>
+
+            <!-- ── SESSION CONTEXT BOXES ── -->
+            <rect x="14" y="125" width="220" height="68" rx="5" style="fill:var(--raised);stroke:var(--blue);stroke-width:1.5"/>
+            <text x="34" y="147" style="fill:var(--blue);font-size:9.5px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.07em">SESSION 1 — JAN 2026</text>
+            <text x="34" y="162" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">HoE: Anika Reddy  ·  SRE pairing req.</text>
+            <text x="34" y="176" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">Prod: #sre-access-requests  ·  2 wk min</text>
+            <text x="34" y="187" style="fill:var(--dim);font-size:9px;font-family:'JetBrains Mono',monospace">system prompt loaded as context</text>
+
+            <rect x="406" y="125" width="220" height="68" rx="5" style="fill:var(--raised);stroke:var(--amber);stroke-width:1.5"/>
+            <text x="426" y="147" style="fill:var(--amber);font-size:9.5px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.07em">SESSION 2 — MAY 2026</text>
+            <text x="426" y="162" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">HoE: Yuki Tanaka ↑  ·  No pairing</text>
+            <text x="426" y="176" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">Prod: IAM portal  ·  3 day min ↓</text>
+            <text x="426" y="187" style="fill:var(--dim);font-size:9px;font-family:'JetBrains Mono',monospace">system prompt loaded as context</text>
+
+            <!-- ── USER QUESTION label (center between rows) ── -->
+            <text x="320" y="214" text-anchor="middle" style="fill:var(--muted);font-size:10px;font-family:'JetBrains Mono',monospace">👤  "How do I get prod access?"</text>
+
+            <!-- ── ARROWS: Sessions → Agent (converging diagonals) ── -->
+            <path d="M 175 194 C 175 218 268 232 278 240" style="fill:none;stroke:var(--blue);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="272,238 282,246 284,234" style="fill:var(--blue);opacity:.7"/>
+            <path d="M 465 194 C 465 218 372 232 362 240" style="fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="356,234 358,246 368,238" style="fill:var(--amber);opacity:.7"/>
+
+            <!-- ── AGENT BOX ── -->
+            <rect x="218" y="242" width="204" height="68" rx="5" style="fill:var(--raised);stroke:var(--green);stroke-width:2"/>
+            <text x="258" y="267" style="fill:var(--green);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:700">🤖  Onboarding Agent</text>
+            <text x="258" y="282" style="fill:var(--muted);font-size:9.5px;font-family:'JetBrains Mono',monospace">claude-haiku-4-5-20251001</text>
+            <text x="258" y="298" style="fill:var(--dim);font-size:9px;font-family:'JetBrains Mono',monospace">streaming · Flask SSE · /ask</text>
+
+            <!-- ── ARROWS: Agent → Answers (diverging) ── -->
+            <path d="M 272 311 C 250 328 190 336 170 342" style="fill:none;stroke:var(--blue);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="164,338 164,348 174,344" style="fill:var(--blue);opacity:.7"/>
+            <path d="M 368 311 C 390 328 450 336 470 342" style="fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:4,3"/>
+            <polygon points="466,338 476,344 476,334" style="fill:var(--amber);opacity:.7"/>
+
+            <!-- ── ANSWER BOXES ── -->
+            <rect x="14" y="344" width="270" height="50" rx="5" style="fill:var(--raised);stroke:var(--blue);stroke-width:1.5"/>
+            <text x="30" y="362" style="fill:var(--blue);font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.06em">S1 ANSWER</text>
+            <text x="30" y="376" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">"Post in #sre-access-requests,</text>
+            <text x="30" y="388" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif"> tag manager + SRE on rota..."</text>
+
+            <rect x="356" y="344" width="270" height="50" rx="5" style="fill:var(--raised);stroke:var(--amber);stroke-width:1.5"/>
+            <text x="372" y="362" style="fill:var(--amber);font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.06em">S2 ANSWER  ⚠️  CHANGED</text>
+            <text x="372" y="376" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif">"This changed — IAM portal now,</text>
+            <text x="372" y="388" style="fill:var(--muted);font-size:9.5px;font-family:'DM Sans',sans-serif"> no Slack, no pairing, 3 days..."</text>
+
+            <!-- ── ANIMATED DATA PULSES ── -->
+            <!-- Src1 → Sess1 (blue) -->
+            <circle r="3.5" style="fill:var(--blue)">
+              <animateMotion dur="1.6s" repeatCount="indefinite" path="M124,77 L124,122"/>
+            </circle>
+            <circle r="3.5" style="fill:var(--blue);opacity:.6">
+              <animateMotion dur="1.6s" repeatCount="indefinite" begin="0.8s" path="M124,77 L124,122"/>
+            </circle>
+
+            <!-- Src2 → Sess2 (amber) -->
+            <circle r="3.5" style="fill:var(--amber)">
+              <animateMotion dur="1.6s" repeatCount="indefinite" begin="0.2s" path="M516,77 L516,122"/>
+            </circle>
+            <circle r="3.5" style="fill:var(--amber);opacity:.6">
+              <animateMotion dur="1.6s" repeatCount="indefinite" begin="1.0s" path="M516,77 L516,122"/>
+            </circle>
+
+            <!-- Sess1 → Agent (blue) -->
+            <circle r="3.5" style="fill:var(--blue)">
+              <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s" path="M 175 194 C 175 218 268 232 278 240"/>
+            </circle>
+
+            <!-- Sess2 → Agent (amber) -->
+            <circle r="3.5" style="fill:var(--amber)">
+              <animateMotion dur="2s" repeatCount="indefinite" begin="1.3s" path="M 465 194 C 465 218 372 232 362 240"/>
+            </circle>
+
+            <!-- Agent → Ans1 (green) -->
+            <circle r="3.5" style="fill:var(--green)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.8s" path="M 272 311 C 250 328 190 336 170 342"/>
+            </circle>
+
+            <!-- Agent → Ans2 (green) -->
+            <circle r="3.5" style="fill:var(--green)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="2.4s" path="M 368 311 C 390 328 450 336 470 342"/>
+            </circle>
+
+          </svg>
+        </div>
       </div>
 
       <!-- COMPARISON -->
