@@ -3,1033 +3,460 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Onboarding Agent — Live Demo</title>
+<title>Onboarding Agent</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap">
 <style>
 :root {
-  --bg:     #0D0F14;
-  --panel:  #161920;
-  --raised: #1E2229;
-  --bd:     #2A2F3A;
-  --bd2:    #353B49;
-  --text:   #E8DFC8;
-  --muted:  #6A7385;
-  --dim:    #4A5162;
-  --green:  #5ECC8A;
-  --blue:   #4A9EEF;
-  --amber:  #F0C040;
-  --red:    #E05050;
+  --bg:    #0D0F14; --panel: #161920; --raised:#1E2229;
+  --bd:    #2A2F3A; --bd2:  #3A4050;
+  --text:  #E8DFC8; --muted:#6A7385; --dim:  #4A5162;
+  --green: #5ECC8A; --blue: #4A9EEF; --amber: #F0C040; --red: #E05050;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg:     #F0EDE6; --panel:  #E6E3DC; --raised: #DAD7D0;
-    --bd:     #C4C1BA; --bd2:    #AEABA4; --text:   #1A1815;
-    --muted:  #6A6560; --dim:    #9A9590;
-    --green:  #1E8A50; --blue:   #1A6ABF; --amber:  #A07010; --red: #B03030;
-  }
-}
-:root[data-theme="dark"] {
-  --bg:     #0D0F14; --panel:  #161920; --raised: #1E2229;
-  --bd:     #2A2F3A; --bd2:    #353B49; --text:   #E8DFC8;
-  --muted:  #6A7385; --dim:    #4A5162;
-  --green:  #5ECC8A; --blue:   #4A9EEF; --amber:  #F0C040; --red: #E05050;
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#F0EDE6;--panel:#E6E3DC;--raised:#DAD7D0;--bd:#C4C1BA;--bd2:#AEABA4;
+  --text:#1A1815;--muted:#6A6560;--dim:#9A9590;
+  --green:#1E8A50;--blue:#1A6ABF;--amber:#A07010;--red:#B03030;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D0F14;--panel:#161920;--raised:#1E2229;--bd:#2A2F3A;--bd2:#3A4050;
+  --text:#E8DFC8;--muted:#6A7385;--dim:#4A5162;
+  --green:#5ECC8A;--blue:#4A9EEF;--amber:#F0C040;--red:#E05050;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;min-height:100vh}
 
-/* TOPBAR */
-.topbar{border-bottom:1px solid var(--bd);padding:.6rem 1.5rem;display:flex;align-items:center;gap:.8rem;background:var(--panel)}
-.tp-pip{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pip 2.4s ease-in-out infinite;flex-shrink:0}
-.tp-title{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600}
-.tp-sub{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)}
-@keyframes pip{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+/* ── TOP BAR ── */
+.topbar{border-bottom:1px solid var(--bd);padding:.55rem 1.4rem;display:flex;align-items:center;gap:.7rem;background:var(--panel)}
+.tp-pip{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pip 2.5s ease-in-out infinite;flex-shrink:0}
+.tp-title{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600}
+.tp-sub{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+@keyframes pip{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
-/* LAYOUT */
-.shell{max-width:1060px;margin:0 auto;padding:0 1.2rem 3rem}
+/* ── LAYOUT ── */
+.shell{max-width:980px;margin:0 auto;padding:1.5rem 1.2rem 3rem;display:grid;grid-template-columns:1fr 260px;gap:1.2rem}
+@media(max-width:680px){.shell{grid-template-columns:1fr}}
+.main-col{display:flex;flex-direction:column;gap:.8rem;min-width:0}
 
-/* HEADER */
-.hdr{padding:2rem 0 1.2rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.hdr h1{font-family:'JetBrains Mono',monospace;font-size:clamp(1.1rem,3vw,1.5rem);font-weight:700;line-height:1.2}
+/* ── HEADER ── */
+.hdr h1{font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700;margin-bottom:.25rem}
 .hdr h1 span{color:var(--amber)}
-.hdr p{margin-top:.35rem;font-size:.88rem;color:var(--muted);max-width:440px}
-.badge-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem}
-.badge{font-family:'JetBrains Mono',monospace;font-size:.67rem;padding:.18rem .5rem;border:1px solid var(--bd2);border-radius:2px;color:var(--muted);letter-spacing:.05em}
+.hdr p{font-size:.85rem;color:var(--muted)}
 
-/* SESSION TABS */
-.session-bar{display:flex;border:1px solid var(--bd);border-radius:4px;overflow:hidden;background:var(--panel);width:fit-content;margin-bottom:.8rem}
-.sess-btn{padding:.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:500;border:none;border-right:1px solid var(--bd);background:transparent;color:var(--muted);cursor:pointer;position:relative;transition:background .15s,color .15s}
-.sess-btn:last-child{border-right:none}
-.sess-btn:hover{background:var(--raised);color:var(--text)}
-.sess-btn.active{background:var(--raised);color:var(--text)}
-.sess-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber)}
-.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.35rem;vertical-align:middle}
-.sess-btn[data-sess="1"] .sdot{background:var(--blue)}
-.sess-btn[data-sess="2"] .sdot{background:var(--green)}
+/* ── SESSION TABS ── */
+.session-bar{display:flex;border:1px solid var(--bd);border-radius:4px;overflow:hidden;background:var(--panel);width:fit-content}
+.sbtn{padding:.45rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;border:none;border-right:1px solid var(--bd);background:transparent;color:var(--muted);cursor:pointer;position:relative;transition:background .15s,color .15s}
+.sbtn:last-child{border-right:none}
+.sbtn:hover{background:var(--raised);color:var(--text)}
+.sbtn.active{background:var(--raised);color:var(--text)}
+.sbtn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber)}
+.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.3rem;vertical-align:middle}
+.sbtn[data-sess="1"] .sdot{background:var(--blue)}
+.sbtn[data-sess="2"] .sdot{background:var(--green)}
 
-/* QUESTION PICKER */
-.q-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap}
-.q-select-label{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);white-space:nowrap;letter-spacing:.05em}
-.q-select{font-family:'JetBrains Mono',monospace;font-size:.75rem;background:var(--panel);color:var(--text);border:1px solid var(--bd2);border-radius:3px;padding:.3rem .6rem;cursor:pointer;flex:1;min-width:0}
-.q-select:focus{outline:1px solid var(--amber);border-color:var(--amber)}
+/* ── CHAT BOX ── */
+.chat-area{border:1px solid var(--bd);border-radius:6px;background:var(--panel);overflow:hidden;display:flex;flex-direction:column;min-height:420px}
+.chat-messages{flex:1;padding:1.1rem 1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem}
+.msg-user{align-self:flex-end;max-width:82%;background:var(--raised);border:1px solid var(--bd2);border-radius:6px 6px 2px 6px;padding:.65rem .9rem;font-size:.88rem}
+.msg-agent{align-self:flex-start;max-width:90%;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.75;color:var(--text)}
+.msg-agent .agent-label{font-size:.65rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem}
+.msg-agent .agent-text{white-space:pre-wrap}
+.msg-agent .agent-text .warn{color:var(--amber);font-weight:600}
+.msg-agent .agent-text .ok{color:var(--green)}
+.msg-placeholder{color:var(--dim);font-size:.82rem;font-family:'JetBrains Mono',monospace;padding:.5rem 0}
 
-/* QUESTION BOX */
-.qbox{border:1px solid var(--bd);background:var(--panel);border-radius:4px;padding:.8rem 1rem;margin-bottom:.8rem;display:flex;align-items:flex-start;gap:.8rem}
-.qlabel{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--blue);white-space:nowrap;padding-top:.1rem;letter-spacing:.05em}
-.qtext{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text);line-height:1.55;flex:1}
+/* ── THINKING STATE ── */
+.thinking-state{display:none;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;gap:1rem;min-height:220px}
+.thinking-state.show{display:flex}
 
-/* RUN ROW */
-.run-row{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
-.run-btn{font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;padding:.55rem 1.3rem;background:var(--amber);color:#0D0F14;border:none;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:.45rem;transition:opacity .15s,transform .1s}
-.run-btn:hover{opacity:.88}
-.run-btn:active{transform:scale(.97)}
-.run-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.run-st{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--muted)}
-.run-st.running{color:var(--amber)}
-.run-st.done{color:var(--green)}
+/* Robot */
+.robot-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:0}
+.robot-antenna{width:2px;height:22px;background:var(--amber);position:relative;margin-bottom:-1px}
+.robot-antenna::after{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber);animation:antennapulse 1s ease-in-out infinite}
+@keyframes antennapulse{0%,100%{transform:translateX(-50%) scale(1);box-shadow:0 0 6px var(--amber)}50%{transform:translateX(-50%) scale(1.4);box-shadow:0 0 14px var(--amber)}}
+.robot-head{width:72px;height:62px;background:var(--raised);border:2px solid var(--amber);border-radius:6px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.robot-eyes{display:flex;gap:12px}
+.eye{width:13px;height:13px;border-radius:50%;background:var(--blue);animation:blink 4s ease-in-out infinite;position:relative}
+.eye.left{animation:blink 4s ease-in-out infinite,lookleft 7s ease-in-out 1.2s infinite}
+.eye.right{animation:blink 4s ease-in-out infinite,lookright 7s ease-in-out 2.4s infinite}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}93%,97%{transform:scaleY(0.05)}}
+@keyframes lookleft{0%,45%,100%{transform:translateX(0)}50%,90%{transform:translateX(-3px)}}
+@keyframes lookright{0%,55%,100%{transform:translateX(0)}60%,90%{transform:translateX(3px)}}
+.robot-mouth{width:22px;height:4px;border-radius:2px;background:var(--muted);animation:mouthchange 5s ease-in-out infinite}
+@keyframes mouthchange{
+  0%,100%{height:4px;border-radius:2px;transform:scaleX(1)}
+  20%{height:6px;border-radius:0 0 6px 6px;transform:scaleX(.8)}
+  40%{height:2px;border-radius:2px;transform:scaleX(1.2)}
+  60%{height:7px;border-radius:6px 6px 0 0;transform:scaleX(.7)} /* frown */
+  80%{height:4px;border-radius:2px;transform:scaleX(1)}
+}
+/* floating particles around robot */
+.particles{position:absolute;inset:-20px;pointer-events:none}
+.p{position:absolute;font-size:.9rem;animation:float 3s ease-in-out infinite;opacity:0}
+.p:nth-child(1){top:10%;left:5%;animation-delay:0s;animation-duration:2.8s}
+.p:nth-child(2){top:20%;right:0%;animation-delay:.8s;animation-duration:3.2s}
+.p:nth-child(3){bottom:15%;left:0%;animation-delay:1.6s;animation-duration:2.5s}
+.p:nth-child(4){bottom:10%;right:5%;animation-delay:.4s;animation-duration:3.5s}
+.p:nth-child(5){top:50%;left:-5%;animation-delay:2s;animation-duration:2.9s}
+@keyframes float{0%{opacity:0;transform:translateY(0) rotate(0deg)}30%{opacity:.7}100%{opacity:0;transform:translateY(-24px) rotate(15deg)}}
 
-/* SPLIT */
-.split{display:grid;grid-template-columns:1fr 270px;gap:0;background:var(--bd);border:1px solid var(--bd);border-radius:4px 4px 0 0;overflow:hidden}
-@media(max-width:660px){.split{grid-template-columns:1fr}}
+/* Progress bar */
+.think-progress{width:140px}
+.prog-bar{height:5px;background:var(--bd2);border-radius:3px;overflow:hidden;position:relative}
+.prog-fill{position:absolute;left:0;top:0;height:100%;background:var(--amber);border-radius:3px;animation:confused 5s ease-in-out infinite}
+@keyframes confused{
+  0%{width:4%}8%{width:38%}18%{width:22%}28%{width:55%}38%{width:44%}
+  52%{width:70%}60%{width:62%}74%{width:83%}84%{width:76%}100%{width:91%}
+}
+.think-msg{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);text-align:center;height:1.2em;position:relative}
+.think-msg-text{position:absolute;inset:0;text-align:center;transition:opacity .3s}
 
-/* PANE HEADER */
-.ph{padding:.48rem .85rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.45rem;background:var(--raised)}
-.ph-title{font-family:'JetBrains Mono',monospace;font-size:.69rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.pd{width:7px;height:7px;border-radius:50%}
+/* ── INPUT ROW ── */
+.input-row{border-top:1px solid var(--bd);padding:.7rem .85rem;display:flex;gap:.6rem;background:var(--panel)}
+.q-input{flex:1;background:var(--raised);border:1px solid var(--bd2);border-radius:4px;padding:.5rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;min-width:0;transition:border-color .15s}
+.q-input::placeholder{color:var(--dim)}
+.q-input:focus{border-color:var(--amber)}
+.send-btn{background:var(--amber);color:#0D0F14;border:none;border-radius:4px;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.send-btn:hover{opacity:.88}
+.send-btn:disabled{opacity:.35;cursor:not-allowed}
 
-/* THINKING */
-.think-pane{background:var(--panel);display:flex;flex-direction:column}
-.think-scroll{flex:1;overflow-y:auto;padding:.85rem .95rem;min-height:300px;max-height:340px;display:flex;flex-direction:column;gap:0;scroll-behavior:smooth}
-.tl{font-family:'JetBrains Mono',monospace;font-size:.79rem;line-height:1.8;white-space:pre-wrap;opacity:0;transform:translateY(3px);transition:opacity .18s,transform .18s}
-.tl.show{opacity:1;transform:none}
-.tl.t-dim{color:var(--dim)} .tl.t-muted{color:var(--muted)} .tl.t-cmd{color:var(--text)}
-.tl.t-amber{color:var(--amber)} .tl.t-blue{color:var(--blue)} .tl.t-green{color:var(--green)}
-.tl.t-red{color:var(--red)} .tl.t-blank{line-height:.9}
-.tl.t-big{font-size:.94rem;font-weight:700;letter-spacing:.03em}
-.tcur{display:inline-block;width:8px;height:.85em;background:var(--amber);vertical-align:text-bottom;animation:blink .7s step-end infinite;opacity:0;margin-left:1px}
-.tcur.show{opacity:1}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* ── CONTEXT PANEL ── */
+.ctx-panel{display:flex;flex-direction:column;gap:.8rem}
+.ctx-card{border:1px solid var(--bd);border-radius:6px;background:var(--panel);overflow:hidden}
+.ctx-hdr{padding:.45rem .8rem;border-bottom:1px solid var(--bd);background:var(--raised);display:flex;align-items:center;gap:.4rem}
+.ctx-hdr-title{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.ctx-body{padding:.75rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;color:var(--muted)}
+.ctx-body .ct{color:var(--text);font-weight:600}
+.ctx-body .cg{color:var(--green)}
+.ctx-body .ca{color:var(--amber)}
+.ctx-body .cr{color:var(--red)}
+.ctx-body .cd{color:var(--dim)}
+.ctx-body p{margin-bottom:.35rem}
+.ctx-body p:last-child{margin-bottom:0}
+.ctx-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-/* MEMORY PANE */
-.mem-pane{background:var(--bg);display:flex;flex-direction:column;border-left:1px solid var(--bd)}
-.mem-scroll{flex:1;overflow-y:auto;padding:.75rem .85rem;min-height:300px;max-height:340px}
-.mem-root{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.3rem}
-/* memEmpty lives OUTSIDE memTree so innerHTML='' never kills it */
-.mem-empty{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--dim);font-style:italic;padding:.2rem .3rem;display:none}
-#memTree{display:flex;flex-direction:column;gap:0}
-.tr{display:flex;align-items:center;gap:.4rem;padding:.17rem .28rem;border-radius:2px;transition:background .2s}
-.tr .ti{font-size:.72rem;min-width:13px}
-.tr .tn{font-family:'JetBrains Mono',monospace;font-size:.71rem;color:var(--dim);flex:1;transition:color .2s}
-.tr .ts{font-family:'JetBrains Mono',monospace;font-size:.63rem;padding:.09rem .28rem;border-radius:2px;opacity:0;transition:opacity .2s;white-space:nowrap}
-.tr.reading{background:color-mix(in srgb,var(--blue) 10%,transparent)}
-.tr.reading .tn{color:var(--blue)} .tr.reading .ts{opacity:1;background:color-mix(in srgb,var(--blue) 18%,transparent);color:var(--blue)}
-.tr.writing{background:color-mix(in srgb,var(--green) 10%,transparent);animation:wpulse .55s ease}
-.tr.writing .tn{color:var(--green)} .tr.writing .ts{opacity:1;background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--green)}
-.tr.updated{background:color-mix(in srgb,var(--amber) 10%,transparent)}
-.tr.updated .tn{color:var(--amber)} .tr.updated .ts{opacity:1;background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
-.tr.done-w .tn{color:var(--green)} .tr.done-w .ts{opacity:1;background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green)}
-.tr.done-r .tn{color:var(--muted)}
-@keyframes wpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 35%,transparent)}70%{box-shadow:0 0 0 5px transparent}100%{box-shadow:none}}
-.mem-doc-sep{margin-top:.55rem;border-top:1px solid var(--bd);padding-top:.45rem}
-.mem-doc-lbl{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+/* session context cards */
+.ctx-s1,.ctx-s2{display:none}
+.ctx-s1.active,.ctx-s2.active{display:block}
 
-/* ANSWER */
-.ans-pane{border:1px solid var(--bd);border-top:none;background:var(--panel);border-radius:0 0 4px 4px;overflow:hidden;max-height:0;transition:max-height .45s ease}
-.ans-pane.open{max-height:480px}
-.ans-ph{padding:.48rem .85rem;border-bottom:1px solid var(--bd);background:var(--raised);display:flex;align-items:center;gap:.45rem}
-.ans-ph-title{font-family:'JetBrains Mono',monospace;font-size:.69rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.ans-body{padding:1rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.85;opacity:0;transition:opacity .35s .25s}
-.ans-pane.open .ans-body{opacity:1}
-.a-warn{color:var(--amber);font-weight:600}
-.a-key{color:var(--blue)} .a-ok{color:var(--green)} .a-dim{color:var(--muted)}
-.a-step{display:block;margin:.25rem 0 .25rem 1.2rem}
-.a-note{display:block;margin-top:.75rem;padding:.55rem .75rem;border-left:2px solid var(--amber);background:color-mix(in srgb,var(--amber) 7%,transparent)}
-.a-note.g{border-color:var(--green);background:color-mix(in srgb,var(--green) 7%,transparent)}
+/* ── SUGGESTION PILLS ── */
+.suggestions{display:flex;flex-wrap:wrap;gap:.4rem;padding:.5rem 0 0}
+.sug-pill{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.22rem .55rem;border:1px solid var(--bd2);border-radius:3px;background:transparent;color:var(--muted);cursor:pointer;transition:border-color .12s,color .12s;text-align:left}
+.sug-pill:hover{border-color:var(--amber);color:var(--amber)}
 
-/* DIFF */
-.cmp{margin-top:1.8rem;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s;pointer-events:none}
-.cmp.show{opacity:1;transform:none;pointer-events:auto}
-.cmp-title{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem}
-.diff{border:1px solid var(--bd);border-radius:4px;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:.77rem}
-.diff-hdr{background:var(--raised);padding:.5rem 1rem;border-bottom:1px solid var(--bd);color:var(--muted);font-size:.68rem;letter-spacing:.05em}
-.dr{display:grid;grid-template-columns:16px 1fr;padding:.13rem 1rem;line-height:1.65}
-.dr.del{background:color-mix(in srgb,var(--red) 9%,transparent)} .dr.del .ds{color:var(--red)} .dr.del .dt{color:color-mix(in srgb,var(--red) 80%,var(--muted))}
-.dr.add{background:color-mix(in srgb,var(--green) 9%,transparent)} .dr.add .ds{color:var(--green)} .dr.add .dt{color:var(--green)}
-.dr.ctx .ds{color:var(--dim)} .dr.ctx .dt{color:var(--muted)}
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
 
-/* FOOTER */
-.foot{margin-top:2.5rem;border-top:1px solid var(--bd);padding:1.3rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem}
-.foot-id{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--dim)}
-.foot-links{display:flex;gap:1.2rem;flex-wrap:wrap}
-.foot-links a{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--bd);transition:color .12s,border-color .12s}
-.foot-links a:hover{color:var(--amber);border-color:var(--amber)}
+/* ── FOOTER ── */
+.foot{border-top:1px solid var(--bd);padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--dim)}
+.foot a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--bd);transition:color .12s,border-color .12s}
+.foot a:hover{color:var(--amber);border-color:var(--amber)}
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="tp-pip"></div>
-  <span class="tp-title">institutional-memory</span>
-  <span class="tp-sub">/ onboarding-agent · card-a</span>
+  <span class="tp-title">onboarding-agent</span>
+  <span class="tp-sub">/ card-a · bts-synthetic</span>
 </div>
 
 <div class="shell">
 
-  <div class="hdr">
-    <div>
+  <!-- LEFT: CHAT -->
+  <div class="main-col">
+
+    <div class="hdr">
       <h1>New-Hire <span>Onboarding Agent</span></h1>
-      <p>Pick a question. Pick a session. Watch it think funny thoughts. Watch it fix itself.</p>
-      <div class="badge-row">
-        <span class="badge">Managed Agents API</span>
-        <span class="badge">Persistent /mnt/memory/</span>
-        <span class="badge">Session 1 → 2</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- SESSION TABS -->
-  <div class="session-bar">
-    <button class="sess-btn active" data-sess="1" onclick="switchSession(1)">
-      <span class="sdot"></span>Session 1 — baseline
-    </button>
-    <button class="sess-btn" data-sess="2" onclick="switchSession(2)">
-      <span class="sdot"></span>Session 2 — policy update
-    </button>
-  </div>
-
-  <!-- QUESTION PICKER -->
-  <div class="q-row">
-    <span class="q-select-label">QUESTION →</span>
-    <select class="q-select" id="qSelect" onchange="setQuestion(this.value)">
-      <optgroup label="── Prod Access (shows policy change)">
-        <option value="prod">I just joined and need read-only prod access to debug an issue tomorrow. What do I do? Be specific about the steps and the people I need to talk to.</option>
-      </optgroup>
-      <optgroup label="── Leadership (shows re-org contradiction)">
-        <option value="hoe">Who is the Head of Engineering? Who do I go to with engineering leadership questions?</option>
-        <option value="ops">Who is the Engineering Ops Lead?</option>
-        <option value="anika">What is Anika Reddy's role? Who reports to her?</option>
-      </optgroup>
-      <optgroup label="── Service Ownership (shows re-org contradiction)">
-        <option value="payments">Who owns the payments service? Who do I talk to if there's an incident?</option>
-        <option value="frontend">Who owns the frontend? Who's the tech lead?</option>
-        <option value="auth">Who owns the auth-service?</option>
-      </optgroup>
-      <optgroup label="── General Onboarding">
-        <option value="git">What's our git workflow? How do I get a PR merged?</option>
-        <option value="postmortem">What's the post-mortem process after a P0 or P1?</option>
-        <option value="day1">What will I have access to on Day 1?</option>
-      </optgroup>
-    </select>
-  </div>
-
-  <!-- QUESTION DISPLAY -->
-  <div class="qbox">
-    <div class="qlabel">USER&nbsp;MSG</div>
-    <div class="qtext" id="qtext">I just joined and need read-only prod access to debug an issue tomorrow. What do I do? Be specific about the steps and the people I need to talk to.</div>
-  </div>
-
-  <!-- RUN -->
-  <div class="run-row">
-    <button class="run-btn" id="runBtn" onclick="runAgent()">
-      <span id="runIcon">▶</span> Run Agent
-    </button>
-    <div class="run-st" id="runSt">ready</div>
-  </div>
-
-  <!-- SPLIT: THINKING + MEMORY -->
-  <div class="split">
-
-    <div class="think-pane">
-      <div class="ph"><div class="pd" style="background:var(--amber)"></div><div class="ph-title">Agent Thinking</div></div>
-      <div class="think-scroll" id="thinkScroll">
-        <div class="tl t-dim show">// select a question and run a session</div>
-        <div class="tcur" id="cursor"></div>
-      </div>
+      <p>Ask anything. Session 1 knows the old rules. Session 2 knows what changed.</p>
     </div>
 
-    <div class="mem-pane">
-      <div class="ph"><div class="pd" style="background:var(--blue)"></div><div class="ph-title">/mnt/memory/</div></div>
-      <div class="mem-scroll">
-        <div class="mem-root">$ ls /mnt/memory/</div>
-        <!-- memEmpty is OUTSIDE memTree so innerHTML='' never destroys it -->
-        <div class="mem-empty" id="memEmpty">(empty)</div>
-        <div id="memTree"></div>
-        <div class="mem-doc-sep" id="docSep" style="display:none">
-          <div class="mem-doc-lbl">docs ingested</div>
-          <div id="docTree"></div>
+    <div class="session-bar">
+      <button class="sbtn active" data-sess="1" onclick="setSession(1)">
+        <span class="sdot"></span>Session 1 — Jan 2026
+      </button>
+      <button class="sbtn" data-sess="2" onclick="setSession(2)">
+        <span class="sdot"></span>Session 2 — May 2026
+      </button>
+    </div>
+
+    <!-- CHAT AREA -->
+    <div class="chat-area">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg-placeholder" id="placeholder">// ask anything about the company...</div>
+
+        <!-- THINKING STATE — funny robot loading -->
+        <div class="thinking-state" id="thinkingState">
+          <div class="robot-wrap">
+            <div class="robot-antenna"></div>
+            <div class="robot-head">
+              <div class="robot-eyes">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+              </div>
+              <div class="robot-mouth"></div>
+            </div>
+            <div class="particles">
+              <div class="p">?</div>
+              <div class="p">!</div>
+              <div class="p">🤔</div>
+              <div class="p">💭</div>
+              <div class="p">⚡</div>
+            </div>
+          </div>
+          <div class="think-progress">
+            <div class="prog-bar"><div class="prog-fill"></div></div>
+          </div>
+          <div class="think-msg">
+            <span class="think-msg-text" id="thinkMsg">consulting the docs...</span>
+          </div>
         </div>
+
+      </div>
+      <div class="input-row">
+        <input class="q-input" id="qInput" type="text" placeholder="Ask about access, org, services, git workflow..." autocomplete="off">
+        <button class="send-btn" id="sendBtn" onclick="ask()">Ask →</button>
       </div>
     </div>
 
-  </div><!-- /split -->
-
-  <!-- ANSWER -->
-  <div class="ans-pane" id="ansPane">
-    <div class="ans-ph"><div class="pd" style="background:var(--green)"></div><div class="ans-ph-title">Final Answer</div></div>
-    <div class="ans-body" id="ansBody"></div>
-  </div>
-
-  <!-- DIFF (appears after both sessions run) -->
-  <div class="cmp" id="cmpSection">
-    <div class="cmp-title">$ diff outputs/session1.txt outputs/session2.txt</div>
-    <div class="diff" id="diffBox">
-      <!-- populated by JS based on active question -->
+    <!-- SUGGESTION PILLS -->
+    <div class="suggestions" id="suggestions">
+      <button class="sug-pill" onclick="prefill(this)">How do I get prod access?</button>
+      <button class="sug-pill" onclick="prefill(this)">Who is the Head of Engineering?</button>
+      <button class="sug-pill" onclick="prefill(this)">Who owns the payments service?</button>
+      <button class="sug-pill" onclick="prefill(this)">What's our git workflow?</button>
+      <button class="sug-pill" onclick="prefill(this)">Who is the Engineering Ops Lead?</button>
+      <button class="sug-pill" onclick="prefill(this)">What do I get on Day 1?</button>
     </div>
-  </div>
 
-</div>
+  </div><!-- /main-col -->
 
-<div class="shell">
-  <div class="foot">
-    <div class="foot-id">institutional-memory · basecamp track 02 · card-a</div>
-    <div class="foot-links">
-      <a href="https://github.com/ksn0ky/institutional-memory/pull/1" target="_blank">PR #1 → ksn0ky</a>
-      <a href="https://github.com/aaalla-d/institutional-memory" target="_blank">aaalla-d fork</a>
+  <!-- RIGHT: CONTEXT PANEL -->
+  <div class="ctx-panel">
+
+    <div class="ctx-card">
+      <div class="ctx-hdr">
+        <div class="ctx-dot" style="background:var(--blue)"></div>
+        <div class="ctx-hdr-title" id="ctxTitle">Session 1 context</div>
+      </div>
+      <div class="ctx-body" id="ctxBody">
+        <!-- populated by setSession() -->
+      </div>
     </div>
+
+    <div class="ctx-card">
+      <div class="ctx-hdr">
+        <div class="ctx-dot" style="background:var(--amber)"></div>
+        <div class="ctx-hdr-title">The demo</div>
+      </div>
+      <div class="ctx-body">
+        <p><span class="ct">Ask the same question</span> in both sessions.</p>
+        <p><span class="cg">Session 2</span> has the updated org + new prod-access policy.</p>
+        <p class="cd">Watch the answer change — that's the memory at work.</p>
+      </div>
+    </div>
+
   </div>
+
+</div><!-- /shell -->
+
+<div class="foot">
+  <span>institutional-memory · basecamp track 02 · card-a</span>
+  <span>
+    <a href="https://github.com/ksn0ky/institutional-memory/pull/1" target="_blank">PR #1 → ksn0ky</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/aaalla-d/institutional-memory" target="_blank">aaalla-d fork</a>
+  </span>
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────
-let currentSession = 1;
-let isRunning = false;
-let sessionsDone = { 1: false, 2: false };
-let timers = [];
-let currentQuestion = 'prod';
+// ── STATE ────────────────────────────────────────────────
+let session = 1;
+let busy = false;
 
-// ─── QUESTIONS ───────────────────────────────────────────
-const QUESTIONS = {
-  prod:       "I just joined and need read-only prod access to debug an issue tomorrow. What do I do? Be specific about the steps and the people I need to talk to.",
-  hoe:        "Who is the Head of Engineering? Who do I go to with engineering leadership questions?",
-  ops:        "Who is the Engineering Ops Lead?",
-  anika:      "What is Anika Reddy's role? Who reports to her?",
-  payments:   "Who owns the payments service? Who do I talk to if there's an incident?",
-  frontend:   "Who owns the frontend? Who's the tech lead?",
-  auth:       "Who owns the auth-service?",
-  git:        "What's our git workflow? How do I get a PR merged?",
-  postmortem: "What's the post-mortem process after a P0 or P1?",
-  day1:       "What will I have access to on Day 1?",
-};
-
-function setQuestion(key) {
-  if (isRunning) return;
-  currentQuestion = key;
-  document.getElementById('qtext').textContent = QUESTIONS[key];
-  resetUI();
-}
-
-// ─── THINKING SCRIPTS ─────────────────────────────────────
-// Each entry: { text, cls, ms, memOp?, docOp? }
-// cls: t-dim | t-muted | t-cmd | t-amber | t-blue | t-green | t-red | t-blank | t-big
-
-function getScript(sess, qkey) {
-  // Build scripts per question per session
-  const scripts = {
-    1: {
-      prod: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/",cls:"t-cmd",ms:500},
-        {text:"",cls:"t-blank",ms:900},
-        {text:"(empty)",cls:"t-dim",ms:1000},
-        {text:"",cls:"t-blank",ms:1200},
-        {text:"ok. I know absolutely nothing.",cls:"t-muted",ms:1400},
-        {text:"cool cool cool.",cls:"t-muted",ms:1900},
-        {text:"this is fine.",cls:"t-muted",ms:2200},
-        {text:"",cls:"t-blank",ms:2500},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:2700,docOp:"onboarding-handbook.md"},
-        {text:"847 lines. here we go.",cls:"t-muted",ms:3100},
-        {text:"...",cls:"t-dim",ms:3500},
-        {text:"...a lot of this is about 'culture' and 'values'",cls:"t-dim",ms:3900},
-        {text:"getting to the actual access policies...",cls:"t-dim",ms:4300},
-        {text:"",cls:"t-blank",ms:4600},
-        {text:"reading access-policy.md...",cls:"t-blue",ms:4800,docOp:"access-policy.md"},
-        {text:"found it. effective January 2026.",cls:"t-muted",ms:5200},
-        {text:"",cls:"t-blank",ms:5500},
-        {text:"step 1: post in #sre-access-requests ← noted",cls:"t-muted",ms:5700},
-        {text:"step 2: tag manager AND SRE on rota",cls:"t-muted",ms:6100},
-        {text:`step 3: pairing session "within 2 working days"`,cls:"t-muted",ms:6500},
-        {text:"",cls:"t-blank",ms:6800},
-        {text:`(the word "typically" is doing a lot of work here)`,cls:"t-dim",ms:7000},
-        {text:"",cls:"t-blank",ms:7400},
-        {text:"step 4: access in ~4 hours after pairing.",cls:"t-muted",ms:7600},
-        {text:"tenure requirement: 2 weeks minimum.",cls:"t-muted",ms:8000},
-        {text:"they just joined.",cls:"t-amber",ms:8400},
-        {text:"...this is going to be a fun conversation.",cls:"t-dim",ms:8800},
-        {text:"",cls:"t-blank",ms:9200},
-        {text:"saving to memory so future-me is smarter.",cls:"t-muted",ms:9500},
-        {text:"writing /mnt/memory/access/prod-access.md ✓",cls:"t-green",ms:10000,memOp:{k:"access/prod-access",op:"write"}},
-        {text:"writing /mnt/memory/people/sre-team.md ✓",cls:"t-green",ms:10400,memOp:{k:"people/sre-team",op:"write"}},
-        {text:"",cls:"t-blank",ms:10800},
-        {text:"ok. answer is accurate. not fun, but accurate.",cls:"t-muted",ms:11000},
-      ],
-      hoe: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading team-directory.md...",cls:"t-blue",ms:1200,docOp:"team-directory.md"},
-        {text:"leadership section... found it.",cls:"t-muted",ms:1800},
-        {text:"Head of Engineering: Anika Reddy",cls:"t-green",ms:2200},
-        {text:"joined 2023. based London.",cls:"t-dim",ms:2600},
-        {text:"writing /mnt/memory/people/leadership.md ✓",cls:"t-green",ms:3200,memOp:{k:"people/leadership",op:"write"}},
-        {text:"that was easy. straight answer.",cls:"t-muted",ms:3800},
-      ],
-      ops: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading team-directory.md...",cls:"t-blue",ms:1200,docOp:"team-directory.md"},
-        {text:"Engineering Ops Lead: Tom Bryce",cls:"t-green",ms:2000},
-        {text:"'the person who actually knows where the bodies are buried.'",cls:"t-dim",ms:2500},
-        {text:"that is a direct quote from the directory.",cls:"t-dim",ms:2900},
-        {text:"writing /mnt/memory/people/leadership.md ✓",cls:"t-green",ms:3500,memOp:{k:"people/leadership",op:"write"}},
-      ],
-      anika: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading team-directory.md...",cls:"t-blue",ms:1200,docOp:"team-directory.md"},
-        {text:"Anika Reddy — Head of Engineering",cls:"t-green",ms:2000},
-        {text:"manages the whole engineering org.",cls:"t-muted",ms:2400},
-        {text:"writing /mnt/memory/people/leadership.md ✓",cls:"t-green",ms:3000,memOp:{k:"people/leadership",op:"write"}},
-      ],
-      payments: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"service ownership table...",cls:"t-dim",ms:1800},
-        {text:"payment-service → Payments team → Tom Bryce",cls:"t-green",ms:2300},
-        {text:"writing /mnt/memory/people/service-owners.md ✓",cls:"t-green",ms:3000,memOp:{k:"people/service-owners",op:"write"}},
-      ],
-      frontend: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"frontend → Web team → Priya Shah",cls:"t-green",ms:2200},
-        {text:"writing /mnt/memory/people/service-owners.md ✓",cls:"t-green",ms:2900,memOp:{k:"people/service-owners",op:"write"}},
-      ],
-      auth: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"auth-service → Platform → Yuki Tanaka",cls:"t-green",ms:2200},
-        {text:"day-to-day owner: Idris Patel (Senior, Platform)",cls:"t-dim",ms:2700},
-        {text:"writing /mnt/memory/people/service-owners.md ✓",cls:"t-green",ms:3300,memOp:{k:"people/service-owners",op:"write"}},
-      ],
-      git: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"git workflow section:",cls:"t-muted",ms:2000},
-        {text:"trunk-based dev. all changes via PR.",cls:"t-green",ms:2400},
-        {text:"two approvals to merge.",cls:"t-green",ms:2800},
-        {text:"simple. i like it.",cls:"t-dim",ms:3200},
-        {text:"writing /mnt/memory/tools/git-workflow.md ✓",cls:"t-green",ms:3800,memOp:{k:"tools/git-workflow",op:"write"}},
-      ],
-      postmortem: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"post-mortem culture: blameless.",cls:"t-green",ms:2200},
-        {text:"written within 48 hours of any P0 or P1.",cls:"t-green",ms:2700},
-        {text:"'blameless' — good. more companies should.",cls:"t-dim",ms:3100},
-        {text:"writing /mnt/memory/policies/incident-process.md ✓",cls:"t-green",ms:3700,memOp:{k:"policies/incident-process",op:"write"}},
-      ],
-      day1: [
-        {text:"$ starting session 1...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/  →  (empty)",cls:"t-dim",ms:600},
-        {text:"reading onboarding-handbook.md...",cls:"t-blue",ms:1200,docOp:"onboarding-handbook.md"},
-        {text:"Day 1 provisions:",cls:"t-muted",ms:2000},
-        {text:"laptop, YubiKey, email, Slack, GitHub",cls:"t-green",ms:2400},
-        {text:"read-only access to staging environments.",cls:"t-green",ms:2800},
-        {text:"NOT prod. explicitly called out.",cls:"t-amber",ms:3200},
-        {text:"writing /mnt/memory/general/day1-setup.md ✓",cls:"t-green",ms:3800,memOp:{k:"general/day1-setup",op:"write"}},
-      ],
-    },
-    2: {
-      prod: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/",cls:"t-cmd",ms:600},
-        {text:"access/prod-access.md",cls:"t-blue",ms:1000},
-        {text:"people/sre-team.md",cls:"t-blue",ms:1200},
-        {text:"",cls:"t-blank",ms:1400},
-        {text:"oh nice. past-me was diligent.",cls:"t-muted",ms:1600},
-        {text:"reading /mnt/memory/access/prod-access.md...",cls:"t-blue",ms:2100,memOp:{k:"access/prod-access",op:"read"}},
-        {text:"Slack, pairing session, 2-week tenure. got it.",cls:"t-muted",ms:2700},
-        {text:"ready to answ—",cls:"t-muted",ms:3000},
-        {text:"",cls:"t-blank",ms:3200},
-        {text:"...wait. let me check the new docs first.",cls:"t-dim",ms:3400},
-        {text:"reading policy-update-2026-05-15.md...",cls:"t-blue",ms:3900,docOp:"policy-update-2026-05-15.md"},
-        {text:`"Supersedes the January 2026 version."`,cls:"t-muted",ms:4600},
-        {text:"",cls:"t-blank",ms:4900},
-        {text:"hm.",cls:"t-dim",ms:5100},
-        {text:"",cls:"t-blank",ms:5400},
-        {text:`"Eliminates the SRE pairing session."`,cls:"t-amber",ms:5600},
-        {text:"",cls:"t-blank",ms:6000},
-        {text:"WAIT.",cls:"t-red t-big",ms:6200},
-        {text:"",cls:"t-blank",ms:6500},
-        {text:"WAIT WAIT WAIT.",cls:"t-red t-big",ms:6700},
-        {text:"",cls:"t-blank",ms:7000},
-        {text:"the pairing session is just... GONE??",cls:"t-red",ms:7200},
-        {text:"replaced with an online course and an IAM portal??",cls:"t-red",ms:7600},
-        {text:"",cls:"t-blank",ms:8000},
-        {text:"let me re-read this.",cls:"t-dim",ms:8200},
-        {text:"...",cls:"t-dim",ms:8700},
-        {text:"yeah. backlog hit 3 weeks. they burned it down.",cls:"t-muted",ms:9100},
-        {text:"honestly? respect.",cls:"t-dim",ms:9500},
-        {text:"",cls:"t-blank",ms:9800},
-        {text:"my memory is WRONG.",cls:"t-amber",ms:10100},
-        {text:"everything I was about to say is WRONG.",cls:"t-amber",ms:10500},
-        {text:"",cls:"t-blank",ms:10800},
-        {text:"tenure: 2 weeks → 3 working days.",cls:"t-green",ms:11000},
-        {text:"this person is eligible RIGHT NOW.",cls:"t-green",ms:11400},
-        {text:"",cls:"t-blank",ms:11700},
-        {text:"updating /mnt/memory/access/prod-access.md...",cls:"t-amber",ms:11900,memOp:{k:"access/prod-access",op:"update"}},
-        {text:"noting: effective 2026-05-15. everything changed.",cls:"t-dim",ms:12400},
-        {text:"",cls:"t-blank",ms:12700},
-        {text:"leading my answer with a warning.",cls:"t-muted",ms:12900},
-        {text:"because the old answer would send them to a dead channel.",cls:"t-red",ms:13300},
-        {text:"that would have been bad.",cls:"t-dim",ms:13700},
-      ],
-      hoe: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"$ ls /mnt/memory/",cls:"t-cmd",ms:600},
-        {text:"people/leadership.md  ← convenient",cls:"t-blue",ms:1000},
-        {text:"reading /mnt/memory/people/leadership.md...",cls:"t-blue",ms:1600,memOp:{k:"people/leadership",op:"read"}},
-        {text:"stored: Head of Engineering = Anika Reddy.",cls:"t-muted",ms:2200},
-        {text:"great. let me check the new docs before answering.",cls:"t-dim",ms:2700},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:3200,docOp:"team-directory-update.md"},
-        {text:"",cls:"t-blank",ms:3800},
-        {text:`"Anika Reddy has moved into a new role as Chief AI Officer."`,cls:"t-amber",ms:4100},
-        {text:`"She no longer manages Engineering day-to-day."`,cls:"t-amber",ms:4500},
-        {text:"",cls:"t-blank",ms:4900},
-        {text:"oh.",cls:"t-dim",ms:5100},
-        {text:"",cls:"t-blank",ms:5300},
-        {text:"OH.",cls:"t-red t-big",ms:5500},
-        {text:"",cls:"t-blank",ms:5800},
-        {text:"I was about to say Anika.",cls:"t-muted",ms:6000},
-        {text:"the actual Head of Engineering is now... Yuki Tanaka.",cls:"t-green",ms:6500},
-        {text:"Anika is Chief AI Officer now. different job.",cls:"t-dim",ms:6900},
-        {text:"",cls:"t-blank",ms:7200},
-        {text:"updating /mnt/memory/people/leadership.md...",cls:"t-amber",ms:7400,memOp:{k:"people/leadership",op:"update"}},
-        {text:"noting: re-org effective 2026-04-15.",cls:"t-dim",ms:7900},
-        {text:"leading answer with correction.",cls:"t-muted",ms:8300},
-      ],
-      ops: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/people/leadership.md...",cls:"t-blue",ms:800,memOp:{k:"people/leadership",op:"read"}},
-        {text:"stored: Eng Ops Lead = Tom Bryce.",cls:"t-muted",ms:1500},
-        {text:"checking new docs...",cls:"t-dim",ms:1900},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2400,docOp:"team-directory-update.md"},
-        {text:`"Tom Bryce has been promoted to Head of Platform."`,cls:"t-amber",ms:3200},
-        {text:`"The Eng Ops Lead role is now held by Priya Shah."`,cls:"t-amber",ms:3700},
-        {text:"",cls:"t-blank",ms:4100},
-        {text:"Tom moved up. Priya moved over. got it.",cls:"t-muted",ms:4300},
-        {text:"updating /mnt/memory/people/leadership.md...",cls:"t-amber",ms:4900,memOp:{k:"people/leadership",op:"update"}},
-        {text:"my old answer would have named Tom. wrong.",cls:"t-red",ms:5400},
-      ],
-      anika: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/people/leadership.md...",cls:"t-blue",ms:800,memOp:{k:"people/leadership",op:"read"}},
-        {text:"stored: Anika = Head of Engineering.",cls:"t-muted",ms:1500},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2000,docOp:"team-directory-update.md"},
-        {text:`"Anika Reddy → Chief AI Officer. effective 2026-04-01."`,cls:"t-amber",ms:2800},
-        {text:`"She no longer manages Engineering day-to-day."`,cls:"t-amber",ms:3300},
-        {text:"",cls:"t-blank",ms:3700},
-        {text:"big change. her whole job changed.",cls:"t-muted",ms:3900},
-        {text:"updating memory + correcting the answer.",cls:"t-amber",ms:4400,memOp:{k:"people/leadership",op:"update"}},
-      ],
-      payments: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/people/service-owners.md...",cls:"t-blue",ms:800,memOp:{k:"people/service-owners",op:"read"}},
-        {text:"stored: payment-service → Tom Bryce.",cls:"t-muted",ms:1600},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2100,docOp:"team-directory-update.md"},
-        {text:`"payment-service: was Tom Bryce → now Maya Patel"`,cls:"t-amber",ms:2900},
-        {text:`"(new hire, joined 2026-03)"`,cls:"t-dim",ms:3300},
-        {text:"",cls:"t-blank",ms:3700},
-        {text:"Tom got promoted to Head of Platform.",cls:"t-muted",ms:3900},
-        {text:"can't own a service AND run a whole team.",cls:"t-dim",ms:4300},
-        {text:"updating /mnt/memory/people/service-owners.md...",cls:"t-amber",ms:4800,memOp:{k:"people/service-owners",op:"update"}},
-        {text:"my old answer named Tom. wrong.",cls:"t-red",ms:5300},
-      ],
-      frontend: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/people/service-owners.md...",cls:"t-blue",ms:800,memOp:{k:"people/service-owners",op:"read"}},
-        {text:"stored: frontend → Priya Shah.",cls:"t-muted",ms:1600},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2100,docOp:"team-directory-update.md"},
-        {text:`"frontend: was Priya Shah → now Daniel Okonkwo"`,cls:"t-amber",ms:2900},
-        {text:"Priya moved to Eng Ops Lead.",cls:"t-dim",ms:3400},
-        {text:"updating /mnt/memory/people/service-owners.md...",cls:"t-amber",ms:4000,memOp:{k:"people/service-owners",op:"update"}},
-        {text:"my old answer named Priya. wrong.",cls:"t-red",ms:4500},
-      ],
-      auth: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/people/service-owners.md...",cls:"t-blue",ms:800,memOp:{k:"people/service-owners",op:"read"}},
-        {text:"stored: auth-service → Yuki Tanaka / Idris Patel.",cls:"t-muted",ms:1600},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2100,docOp:"team-directory-update.md"},
-        {text:"auth-service ownership: no change listed.",cls:"t-green",ms:2900},
-        {text:"",cls:"t-blank",ms:3200},
-        {text:"huh. something stayed the same.",cls:"t-dim",ms:3400},
-        {text:"Yuki is now Head of Engineering though — so Idris",cls:"t-dim",ms:3800},
-        {text:"is probably running auth day-to-day. noting that.",cls:"t-dim",ms:4200},
-        {text:"updating /mnt/memory/people/service-owners.md...",cls:"t-amber",ms:4800,memOp:{k:"people/service-owners",op:"update"}},
-      ],
-      git: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/tools/git-workflow.md...",cls:"t-blue",ms:800,memOp:{k:"tools/git-workflow",op:"read"}},
-        {text:"stored: trunk-based, PRs, 2 approvals.",cls:"t-muted",ms:1600},
-        {text:"checking update docs for changes...",cls:"t-dim",ms:2100},
-        {text:"reading team-directory-update.md...",cls:"t-blue",ms:2600,docOp:"team-directory-update.md"},
-        {text:"no git workflow changes mentioned.",cls:"t-green",ms:3400},
-        {text:"same answer as session 1. rare!",cls:"t-dim",ms:3800},
-        {text:"(memory still accurate, no update needed)",cls:"t-dim",ms:4200},
-      ],
-      postmortem: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/policies/incident-process.md...",cls:"t-blue",ms:800,memOp:{k:"policies/incident-process",op:"read"}},
-        {text:"stored: blameless, 48h written postmortem.",cls:"t-muted",ms:1600},
-        {text:"checking new docs for changes...",cls:"t-dim",ms:2100},
-        {text:"no policy changes in the update docs.",cls:"t-green",ms:2900},
-        {text:"memory still accurate. same answer.",cls:"t-dim",ms:3400},
-      ],
-      day1: [
-        {text:"$ starting session 2 — same memory store...",cls:"t-dim",ms:0},
-        {text:"reading /mnt/memory/general/day1-setup.md...",cls:"t-blue",ms:800,memOp:{k:"general/day1-setup",op:"read"}},
-        {text:"stored: laptop, YubiKey, email, Slack, GitHub, staging.",cls:"t-muted",ms:1600},
-        {text:"checking update docs...",cls:"t-dim",ms:2100},
-        {text:"no changes to Day 1 setup mentioned.",cls:"t-green",ms:2900},
-        {text:"memory still accurate.",cls:"t-dim",ms:3400},
-      ],
-    }
-  };
-
-  return scripts[sess][qkey] || scripts[sess]['prod'];
-}
-
-// ─── ANSWERS ──────────────────────────────────────────────
-function getAnswer(sess, qkey) {
-  const A = {
-    1: {
-      prod: `<span class="a-key">Session 1 answer</span> <span class="a-dim">— January 2026 policy (from memory)</span>
-
-<span class="a-key">To get read-only prod access:</span>
-<span class="a-step">1. Post in <span class="a-ok">#sre-access-requests</span> on Slack</span>
-<span class="a-step">2. Tag your direct manager AND the SRE on rota this week</span>
-<span class="a-step">3. SRE schedules a 30-min pairing session <span class="a-dim">("within 2 working days. typically.")</span></span>
-<span class="a-step">4. After pairing, access via Okta — ~4 hours to provision</span>
-<span class="a-note"><span class="a-warn">⚠ Tenure: 2 weeks minimum.</span> If you just joined, you may need to wait.
-<span class="a-key">Contact:</span> Maya Singh (Head of Security) if stuck.</span>`,
-
-      hoe: `<span class="a-key">Head of Engineering:</span> <span class="a-ok">Anika Reddy</span>
-<span class="a-dim">Joined 2023. Based London. Slack: @anika</span>
-
-Go to Anika for org-level engineering decisions, team escalations, and strategic direction.`,
-
-      ops: `<span class="a-key">Engineering Ops Lead:</span> <span class="a-ok">Tom Bryce</span>
-<span class="a-dim">Joined 2021. Based London. Slack: @tomb</span>
-
-Tom is the person who actually knows where the bodies are buried. (That's a direct quote from the directory.)
-Go to him for process, tooling, and anything operational that doesn't fit elsewhere.`,
-
-      anika: `<span class="a-key">Anika Reddy</span> — Head of Engineering
-<span class="a-dim">Joined 2023. Based London. Slack: @anika</span>
-
-She manages the engineering organisation. The team leads (Carlos, Yuki, Maya, Tom) report up through her.`,
-
-      payments: `<span class="a-key">payment-service</span> — owned by the Payments team
-<span class="a-key">Tech lead:</span> <span class="a-ok">Tom Bryce</span>
-
-For incidents, go to Tom. If Tom is unavailable, escalate via the on-call SRE.`,
-
-      frontend: `<span class="a-key">frontend</span> — owned by the Web team
-<span class="a-key">Tech lead:</span> <span class="a-ok">Priya Shah</span>
-
-Ping @priya on Slack for anything frontend-related.`,
-
-      auth: `<span class="a-key">auth-service</span> — owned by the Platform team
-<span class="a-key">Team lead:</span> <span class="a-ok">Yuki Tanaka</span>
-<span class="a-key">Day-to-day owner:</span> <span class="a-ok">Idris Patel</span> (Senior Engineer, Platform)
-
-For auth incidents: ping Idris first, escalate to Yuki if needed.`,
-
-      git: `<span class="a-key">Git workflow — trunk-based development</span>
-
-<span class="a-step">• All changes go through a Pull Request — no direct pushes to main</span>
-<span class="a-step">• Two approvals required to merge</span>
-<span class="a-step">• Your buddy will walk you through this in your first week</span>
-
-For questions: ask your buddy or check the engineering handbook.`,
-
-      postmortem: `<span class="a-key">Post-mortem process:</span>
-
-<span class="a-step">• <span class="a-ok">Blameless</span> — the culture is explicitly blameless, not punitive</span>
-<span class="a-step">• Written within <span class="a-ok">48 hours</span> of any P0 or P1 incident</span>
-
-If you're involved in an incident, ask your manager or the on-call lead to loop you into the post-mortem doc.`,
-
-      day1: `<span class="a-key">What you'll have on Day 1:</span>
-
-<span class="a-step">• Laptop + YubiKey</span>
-<span class="a-step">• Email (firstname.lastname@bts-synthetic.example)</span>
-<span class="a-step">• Slack + GitHub (org: bts-synthetic)</span>
-<span class="a-step">• Read-only access to <span class="a-ok">staging</span> environments</span>
-<span class="a-note"><span class="a-warn">Not prod.</span> Prod access requires 2 weeks of tenure + a pairing session with an SRE. See the access policy.</span>`,
-    },
-
-    2: {
-      prod: `<span class="a-warn">⚠ THIS CHANGED on 2026-05-15</span> <span class="a-dim">— memory updated, old policy superseded</span>
-<span class="a-dim">Old workflow (Slack + SRE pairing) is gone. New process:</span>
-
-<span class="a-step">1. Complete <span class="a-ok">"Prod Access Foundations"</span> in the BTS Learning portal (~90 min, self-paced)</span>
-<span class="a-step">2. Request access via the <span class="a-ok">IAM platform</span> — link in your completion email</span>
-<span class="a-step">3. Access granted as a <span class="a-ok">4-hour just-in-time window</span> — re-request as needed</span>
-<span class="a-note g"><span class="a-ok">✓ Tenure: 3 working days</span> (was 2 weeks). If you joined 3+ days ago, you're eligible now.
-<span class="a-dim">Why it changed: the pairing-session backlog hit 3 weeks. They rebuilt the whole system.</span></span>`,
-
-      hoe: `<span class="a-warn">⚠ THIS CHANGED — re-org effective 2026-04-15</span>
-
-<span class="a-key">Head of Engineering (current):</span> <span class="a-ok">Yuki Tanaka</span>
-<span class="a-dim">Previously Head of Platform. Now leads the engineering org.</span>
-
-<span class="a-key">Anika Reddy:</span> now <span class="a-ok">Chief AI Officer</span> — she no longer manages Engineering day-to-day.
-<span class="a-dim">If you go to Anika with an engineering question, she will redirect you to Yuki.</span>`,
-
-      ops: `<span class="a-warn">⚠ THIS CHANGED — re-org effective May 2026</span>
-
-<span class="a-key">Engineering Ops Lead (current):</span> <span class="a-ok">Priya Shah</span>
-<span class="a-dim">Moved over from leading the Web team.</span>
-
-<span class="a-key">Tom Bryce:</span> now <span class="a-ok">Head of Platform</span> — promoted, no longer in the Ops Lead role.
-<span class="a-dim">Tom's Slack handle (@tomb) still works, but direct operational questions to Priya.</span>`,
-
-      anika: `<span class="a-warn">⚠ THIS CHANGED — effective 2026-04-01</span>
-
-<span class="a-key">Anika Reddy</span> is now <span class="a-ok">Chief AI Officer</span>.
-<span class="a-dim">She no longer manages Engineering day-to-day.</span>
-
-<span class="a-key">Head of Engineering (current):</span> Yuki Tanaka.
-<span class="a-dim">If your question is about engineering org or team structure, Yuki is now the right person.</span>`,
-
-      payments: `<span class="a-warn">⚠ THIS CHANGED — ownership transferred, May 2026</span>
-
-<span class="a-key">payment-service (current owner):</span> <span class="a-ok">Maya Patel</span>
-<span class="a-dim">New hire, joined March 2026. Took over from Tom Bryce.</span>
-
-Tom was promoted to Head of Platform and can't run a service too.
-<span class="a-dim">For incidents: go to Maya Patel first. Escalate via on-call SRE if unavailable.</span>`,
-
-      frontend: `<span class="a-warn">⚠ THIS CHANGED — ownership transferred, May 2026</span>
-
-<span class="a-key">frontend (current owner):</span> <span class="a-ok">Daniel Okonkwo</span>
-<span class="a-dim">Priya Shah moved to Engineering Ops Lead role.</span>
-
-<span class="a-dim">For frontend questions, ping Daniel. Priya is in a different role now.</span>`,
-
-      auth: `<span class="a-key">auth-service</span> — Platform team. No ownership change in the re-org.
-
-<span class="a-key">Tech lead:</span> <span class="a-ok">Yuki Tanaka</span> (now also Head of Engineering — busier than before)
-<span class="a-key">Day-to-day:</span> <span class="a-ok">Idris Patel</span> — likely running auth independently now that Yuki has org responsibilities.
-<span class="a-dim">For auth incidents: Idris first, Yuki as escalation.</span>`,
-
-      git: `<span class="a-key">Git workflow — unchanged</span> <span class="a-dim">(no changes in the May 2026 update docs)</span>
-
-<span class="a-step">• Trunk-based development, all changes via PR</span>
-<span class="a-step">• Two approvals to merge</span>
-
-<span class="a-dim">Memory was already accurate. No update needed.</span>`,
-
-      postmortem: `<span class="a-key">Post-mortem process — unchanged</span> <span class="a-dim">(no changes in the May 2026 update docs)</span>
-
-<span class="a-step">• Blameless culture</span>
-<span class="a-step">• Written within 48 hours of any P0 or P1</span>
-
-<span class="a-dim">Memory was still accurate. Same answer as Session 1.</span>`,
-
-      day1: `<span class="a-key">Day 1 setup — unchanged</span> <span class="a-dim">(no changes in the May 2026 update docs)</span>
-
-<span class="a-step">• Laptop, YubiKey, email, Slack, GitHub, staging access</span>
-<span class="a-step">• Not prod — but note: prod access tenure dropped to 3 working days now</span>
-
-<span class="a-dim">Core setup unchanged. Memory still accurate.</span>`,
-    }
-  };
-  return A[sess][qkey] || A[sess]['prod'];
-}
-
-// ─── DIFFS ────────────────────────────────────────────────
-const DIFFS = {
-  prod: [
-    {t:"ctx",d:"QUESTION: I just joined... need read-only prod access tomorrow..."},
-    {t:"ctx",d:""},
-    {t:"del",d:"Post in #sre-access-requests. Tag your manager AND the SRE on rota."},
-    {t:"del",d:`Wait for pairing session ("within 2 working days. typically.")`},
-    {t:"del",d:"Tenure requirement: 2 weeks. You may need to wait."},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED (2026-05-15) — old policy superseded."},
-    {t:"add",d:`Complete "Prod Access Foundations" in BTS Learning portal.`},
-    {t:"add",d:"Request access via IAM platform. No Slack. No pairing session."},
-    {t:"add",d:"Tenure: 3 working days (was 2 weeks). You're eligible now."},
-  ],
-  hoe: [
-    {t:"ctx",d:"QUESTION: Who is the Head of Engineering?"},
-    {t:"ctx",d:""},
-    {t:"del",d:"Head of Engineering: Anika Reddy"},
-    {t:"del",d:"Based London. Slack: @anika"},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED — re-org effective 2026-04-15"},
-    {t:"add",d:"Head of Engineering (current): Yuki Tanaka"},
-    {t:"add",d:"Anika Reddy is now Chief AI Officer — different job."},
-  ],
-  ops: [
-    {t:"ctx",d:"QUESTION: Who is the Engineering Ops Lead?"},
-    {t:"ctx",d:""},
-    {t:"del",d:"Engineering Ops Lead: Tom Bryce. Slack: @tomb"},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED — re-org effective May 2026"},
-    {t:"add",d:"Engineering Ops Lead: Priya Shah (moved from Web team lead)"},
-    {t:"add",d:"Tom Bryce → promoted to Head of Platform."},
-  ],
-  anika: [
-    {t:"ctx",d:"QUESTION: What is Anika Reddy's role?"},
-    {t:"ctx",d:""},
-    {t:"del",d:"Anika Reddy — Head of Engineering. Manages the org."},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED — effective 2026-04-01"},
-    {t:"add",d:"Anika Reddy → Chief AI Officer. No longer manages Engineering."},
-    {t:"add",d:"Head of Engineering is now Yuki Tanaka."},
-  ],
-  payments: [
-    {t:"ctx",d:"QUESTION: Who owns the payments service?"},
-    {t:"ctx",d:""},
-    {t:"del",d:"payment-service owner: Tom Bryce"},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED — ownership transferred May 2026"},
-    {t:"add",d:"payment-service owner: Maya Patel (joined March 2026)"},
-    {t:"add",d:"Tom promoted to Head of Platform; can't own a service too."},
-  ],
-  frontend: [
-    {t:"ctx",d:"QUESTION: Who owns the frontend?"},
-    {t:"ctx",d:""},
-    {t:"del",d:"frontend owner: Priya Shah (Web team lead)"},
-    {t:"ctx",d:""},
-    {t:"add",d:"⚠ THIS CHANGED — ownership transferred May 2026"},
-    {t:"add",d:"frontend owner: Daniel Okonkwo"},
-    {t:"add",d:"Priya Shah moved to Engineering Ops Lead role."},
-  ],
-  auth: [
-    {t:"ctx",d:"QUESTION: Who owns the auth-service?"},
-    {t:"ctx",d:""},
-    {t:"ctx",d:"auth-service: Platform team. Yuki Tanaka / Idris Patel."},
-    {t:"ctx",d:""},
-    {t:"add",d:"No ownership change in re-org. But Yuki is now Head of Engineering."},
-    {t:"add",d:"Idris Patel likely running auth independently now."},
-    {t:"add",d:"Recommendation: Idris first, Yuki as escalation."},
-  ],
-  git: [
-    {t:"ctx",d:"QUESTION: What's our git workflow?"},
-    {t:"ctx",d:""},
-    {t:"ctx",d:"Trunk-based. All changes via PR. Two approvals to merge."},
-    {t:"ctx",d:""},
-    {t:"add",d:"(no changes in Session 2 — memory was accurate, same answer)"},
-  ],
-  postmortem: [
-    {t:"ctx",d:"QUESTION: What's the post-mortem process?"},
-    {t:"ctx",d:""},
-    {t:"ctx",d:"Blameless. Written within 48 hours of any P0/P1."},
-    {t:"ctx",d:""},
-    {t:"add",d:"(no changes in Session 2 — memory was accurate, same answer)"},
-  ],
-  day1: [
-    {t:"ctx",d:"QUESTION: What will I have access to on Day 1?"},
-    {t:"ctx",d:""},
-    {t:"ctx",d:"Laptop, YubiKey, email, Slack, GitHub, staging. Not prod."},
-    {t:"ctx",d:""},
-    {t:"add",d:"(no changes in Session 2 — but note: prod access tenure now 3 days, not 2 weeks)"},
-  ],
-};
-
-// ─── MEMORY FILE REGISTRY ─────────────────────────────────
-// Only the files that might appear during a session are shown
-const MEM_FILES = {
-  "access/prod-access":       {label:"access/prod-access.md"},
-  "people/leadership":        {label:"people/leadership.md"},
-  "people/sre-team":          {label:"people/sre-team.md"},
-  "people/service-owners":    {label:"people/service-owners.md"},
-  "tools/git-workflow":       {label:"tools/git-workflow.md"},
-  "policies/incident-process":{label:"policies/incident-process.md"},
-  "general/day1-setup":       {label:"general/day1-setup.md"},
-};
-
-const DOC_FILES = [
-  "onboarding-handbook.md",
-  "team-directory.md",
-  "access-policy.md",
-  "policy-update-2026-05-15.md",
-  "team-directory-update.md",
+// ── THINK MESSAGES ───────────────────────────────────────
+const THINK_MSGS = [
+  "checking if anyone documented this...",
+  "scanning confluence... 🦗",
+  "waking up the intern...",
+  "reading 847 lines of the handbook...",
+  "triangulating from 3 contradictory Slack threads...",
+  "consulting the forbidden wiki page...",
+  "asking the SRE on rota... (they're in a pairing session)",
+  "finding the ONE relevant line...",
+  "it's probably in the onboarding doc...",
+  "yes. it is. section 4. line 73.",
 ];
+let thinkIdx = 0;
+let thinkTimer = null;
 
-// ─── INIT TREE ────────────────────────────────────────────
-function initTree() {
-  // memEmpty is OUTSIDE memTree — safe to clear memTree without null-ing memEmpty
-  const tree = document.getElementById('memTree');
-  tree.innerHTML = '';
-  Object.entries(MEM_FILES).forEach(([k, f]) => {
-    const row = document.createElement('div');
-    row.className = 'tr';
-    row.id = 'mf-' + k.replace(/\//g,'-');
-    row.style.opacity = '0';
-    row.innerHTML = `<span class="ti">·</span><span class="tn">${f.label}</span><span class="ts" id="ms-${k.replace(/\//g,'-')}"></span>`;
-    tree.appendChild(row);
-  });
-
-  document.getElementById('memEmpty').style.display = 'block';
-
-  document.getElementById('docSep').style.display = 'none';
-  const docTree = document.getElementById('docTree');
-  docTree.innerHTML = '';
-  DOC_FILES.forEach(name => {
-    const row = document.createElement('div');
-    row.className = 'tr';
-    row.id = 'df-' + name.replace(/[\.\-]/g,'_');
-    row.style.opacity = '0.28';
-    row.innerHTML = `<span class="ti">·</span><span class="tn">${name}</span><span class="ts" id="ds-${name.replace(/[\.\-]/g,'_')}"></span>`;
-    docTree.appendChild(row);
-  });
+function startThinking() {
+  const el = document.getElementById('thinkMsg');
+  thinkIdx = 0;
+  el.textContent = THINK_MSGS[0];
+  thinkTimer = setInterval(() => {
+    el.style.opacity = '0';
+    setTimeout(() => {
+      thinkIdx = (thinkIdx + 1) % THINK_MSGS.length;
+      el.textContent = THINK_MSGS[thinkIdx];
+      el.style.opacity = '1';
+    }, 300);
+  }, 1800);
 }
 
-// ─── MEM OPS ──────────────────────────────────────────────
-function setMem(k, state) {
-  const id = k.replace(/\//g,'-');
-  const row = document.getElementById('mf-' + id);
-  const st  = document.getElementById('ms-' + id);
-  if (!row) return;
-  row.style.opacity = '1';
-  document.getElementById('memEmpty').style.display = 'none';
-  row.className = 'tr';
-  if (state === 'read')   { row.classList.add('reading'); if(st) st.textContent = 'reading'; }
-  if (state === 'write')  { row.classList.add('writing'); if(st) st.textContent = 'writing'; }
-  if (state === 'update') { row.classList.add('updated'); if(st) st.textContent = 'updated!'; }
-  if (state === 'done-r') { row.classList.add('done-r');  if(st) st.textContent = ''; }
-  if (state === 'done-w') { row.classList.add('done-w');  if(st) st.textContent = 'stored ✓'; }
+function stopThinking() {
+  clearInterval(thinkTimer);
 }
 
-function setDoc(name) {
-  const id = name.replace(/[\.\-]/g,'_');
-  const row = document.getElementById('df-' + id);
-  const st  = document.getElementById('ds-' + id);
-  if (!row) return;
-  document.getElementById('docSep').style.display = 'block';
-  row.style.opacity = '1';
-  row.className = 'tr reading';
-  if (st) st.textContent = 'read';
+// ── SESSION CONTEXT ───────────────────────────────────────
+const CTX = {
+  1: {
+    title: 'Session 1 — Jan 2026',
+    html: `
+<p><span class="ct">Head of Eng:</span> Anika Reddy</p>
+<p><span class="ct">Eng Ops Lead:</span> Tom Bryce</p>
+<p><span class="ct">Head of Platform:</span> Yuki Tanaka</p>
+<p><span class="ct">Head of SRE:</span> Carlos Mendes</p>
+<p>&nbsp;</p>
+<p><span class="ct">payments:</span> Tom Bryce</p>
+<p><span class="ct">frontend:</span> Priya Shah</p>
+<p><span class="ct">auth:</span> Yuki / Idris Patel</p>
+<p>&nbsp;</p>
+<p class="ca">Prod access:</p>
+<p>Post in #sre-access-requests</p>
+<p>Pairing session required</p>
+<p>Tenure: 2 weeks minimum</p>
+    `
+  },
+  2: {
+    title: 'Session 2 — May 2026',
+    html: `
+<p><span class="ct">Head of Eng:</span> <span class="cg">Yuki Tanaka</span> <span class="cr">↑</span></p>
+<p><span class="ct">Anika Reddy:</span> <span class="ca">→ Chief AI Officer</span></p>
+<p><span class="ct">Eng Ops Lead:</span> <span class="cg">Priya Shah</span> <span class="cr">↑</span></p>
+<p><span class="ct">Head of Platform:</span> <span class="cg">Tom Bryce</span> <span class="cr">↑</span></p>
+<p>&nbsp;</p>
+<p><span class="ct">payments:</span> <span class="ca">Maya Patel ⚠</span></p>
+<p><span class="ct">frontend:</span> <span class="ca">Daniel Okonkwo ⚠</span></p>
+<p><span class="ct">auth:</span> unchanged</p>
+<p>&nbsp;</p>
+<p class="ca">Prod access (UPDATED):</p>
+<p>BTS Learning portal cert</p>
+<p class="cg">No Slack. No pairing. ✓</p>
+<p>Tenure: <span class="cg">3 days</span> (was 2 wks)</p>
+    `
+  }
+};
+
+function setSession(n) {
+  if (busy) return;
+  session = n;
+  document.querySelectorAll('.sbtn').forEach(b => b.classList.toggle('active', +b.dataset.sess === n));
+  const ctx = CTX[n];
+  document.getElementById('ctxTitle').textContent = ctx.title;
+  document.getElementById('ctxBody').innerHTML = ctx.html;
+  document.getElementById('ctxBody').style.borderTop = n === 2 ? `2px solid var(--amber)` : '';
 }
 
-// ─── RENDER DIFF ──────────────────────────────────────────
-function renderDiff(qkey) {
-  const rows = DIFFS[qkey] || DIFFS['prod'];
-  const box = document.getElementById('diffBox');
-  box.innerHTML = `<div class="diff-hdr">same question · session 1 vs session 2 · what the agent remembered</div>`;
-  rows.forEach(r => {
-    const d = document.createElement('div');
-    d.className = 'dr ' + r.t;
-    d.innerHTML = `<span class="ds">${r.t==='del'?'-':r.t==='add'?'+':' '}</span><span class="dt">${r.d}</span>`;
-    box.appendChild(d);
-  });
+// ── PREFILL ───────────────────────────────────────────────
+function prefill(el) {
+  document.getElementById('qInput').value = el.textContent;
+  document.getElementById('qInput').focus();
 }
 
-// ─── SWITCH SESSION ───────────────────────────────────────
-function switchSession(n) {
-  if (isRunning) return;
-  currentSession = n;
-  document.querySelectorAll('.sess-btn').forEach(b => {
-    b.classList.toggle('active', parseInt(b.dataset.sess) === n);
-  });
-  resetUI();
-}
+// ── ASK ───────────────────────────────────────────────────
+async function ask() {
+  if (busy) return;
+  const input = document.getElementById('qInput');
+  const question = input.value.trim();
+  if (!question) return;
 
-// ─── RESET ────────────────────────────────────────────────
-function resetUI() {
-  timers.forEach(clearTimeout);
-  timers = [];
-  const scroll = document.getElementById('thinkScroll');
-  scroll.innerHTML = '<div class="tl t-dim show">// select a question and run a session</div><div class="tcur" id="cursor"></div>';
-  initTree();
-  document.getElementById('ansPane').classList.remove('open');
-  document.getElementById('runBtn').disabled = false;
-  document.getElementById('runIcon').textContent = '▶';
-  const st = document.getElementById('runSt');
-  st.className = 'run-st';
-  st.textContent = 'ready';
-  isRunning = false;
-}
+  busy = true;
+  input.disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+  input.value = '';
 
-// ─── RUN ──────────────────────────────────────────────────
-function runAgent() {
-  if (isRunning) return;
-  isRunning = true;
-  document.getElementById('runBtn').disabled = true;
-  document.getElementById('runIcon').textContent = '◼';
-  const st = document.getElementById('runSt');
-  st.className = 'run-st running';
-  st.textContent = 'running session ' + currentSession + '...';
+  // Hide placeholder, show user message
+  document.getElementById('placeholder').style.display = 'none';
+  const msgs = document.getElementById('chatMessages');
 
-  // Clear thinking + reset tree
-  const scroll = document.getElementById('thinkScroll');
-  scroll.innerHTML = '<div class="tcur show" id="cursor"></div>';
-  initTree();
+  const userEl = document.createElement('div');
+  userEl.className = 'msg-user';
+  userEl.textContent = question;
+  msgs.insertBefore(userEl, document.getElementById('thinkingState'));
 
-  const script = getScript(currentSession, currentQuestion);
-  const maxMs = script[script.length - 1].ms + 700;
+  // Show thinking robot
+  document.getElementById('thinkingState').classList.add('show');
+  startThinking();
+  msgs.scrollTop = msgs.scrollHeight;
 
-  script.forEach(line => {
-    const t = setTimeout(() => {
-      const cursor = document.getElementById('cursor');
-      if (!cursor) return;
-      const el = document.createElement('div');
-      el.className = 'tl ' + line.cls;
-      el.textContent = line.text;
-      scroll.insertBefore(el, cursor);
-      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
-      scroll.scrollTop = scroll.scrollHeight;
+  // Build agent message element (hidden until first text)
+  const agentEl = document.createElement('div');
+  agentEl.className = 'msg-agent';
+  agentEl.innerHTML = `<div class="agent-label">session ${session} · ${session===1?'jan 2026':'may 2026'}</div><div class="agent-text" id="agentTextCurrent"></div>`;
+  agentEl.style.display = 'none';
+  msgs.appendChild(agentEl);
 
-      if (line.memOp) {
-        const {k, op} = line.memOp;
-        setMem(k, op === 'read' ? 'read' : op === 'write' ? 'write' : 'update');
-        const fin = setTimeout(() => {
-          setMem(k, op === 'read' ? 'done-r' : 'done-w');
-        }, 700);
-        timers.push(fin);
+  try {
+    const resp = await fetch('/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question, session})
+    });
+
+    if (!resp.ok) throw new Error('Server error ' + resp.status);
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let answer = '';
+    let firstChunk = true;
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, {stream: true});
+      for (const line of chunk.split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        let data;
+        try { data = JSON.parse(line.slice(6)); } catch { continue; }
+        if (data.error) throw new Error(data.error);
+        if (data.text) {
+          if (firstChunk) {
+            firstChunk = false;
+            stopThinking();
+            document.getElementById('thinkingState').classList.remove('show');
+            agentEl.style.display = 'block';
+          }
+          answer += data.text;
+          document.getElementById('agentTextCurrent').textContent = answer;
+          msgs.scrollTop = msgs.scrollHeight;
+        }
+        if (data.done) break;
       }
-      if (line.docOp) {
-        setDoc(line.docOp);
-      }
-    }, line.ms);
-    timers.push(t);
-  });
-
-  // Show answer
-  const ansT = setTimeout(() => {
-    const cursor = document.getElementById('cursor');
-    if (cursor) cursor.classList.remove('show');
-    const pane = document.getElementById('ansPane');
-    document.getElementById('ansBody').innerHTML = getAnswer(currentSession, currentQuestion);
-    pane.classList.add('open');
-
-    sessionsDone[currentSession] = true;
-    isRunning = false;
-    document.getElementById('runBtn').disabled = false;
-    document.getElementById('runIcon').textContent = '↺';
-    st.className = 'run-st done';
-    st.textContent = 'session ' + currentSession + ' complete · click to re-run';
-
-    if (sessionsDone[1] && sessionsDone[2]) {
-      renderDiff(currentQuestion);
-      const cmp = document.getElementById('cmpSection');
-      cmp.classList.add('show');
-      setTimeout(() => cmp.scrollIntoView({behavior:'smooth', block:'nearest'}), 200);
     }
-  }, maxMs);
-  timers.push(ansT);
+  } catch (err) {
+    stopThinking();
+    document.getElementById('thinkingState').classList.remove('show');
+    const errEl = document.createElement('div');
+    errEl.className = 'msg-agent';
+    errEl.innerHTML = `<div class="agent-label" style="color:var(--red)">error</div><div class="agent-text" style="color:var(--red)">${err.message}\n\nIs the server running? python server.py</div>`;
+    msgs.appendChild(errEl);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  busy = false;
+  input.disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
 }
 
-// ─── INIT ─────────────────────────────────────────────────
-initTree();
+// Enter key to send
+document.getElementById('qInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+});
+
+// Init
+setSession(1);
 </script>
 </body>
 </html>
