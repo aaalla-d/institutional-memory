@@ -1,845 +1,1015 @@
-<title>The Onboarding Agent</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onboarding Agent — Live Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap">
 <style>
-  :root {
-    --bg: #1C1C1C;
-    --surface: #272727;
-    --surface-2: #313131;
-    --gold: #E8C547;
-    --gold-dim: #a88d30;
-    --red: #E85454;
-    --green: #54C47A;
-    --text: #F0EDE8;
-    --muted: #8A8580;
-    --border: #3A3A3A;
-    --mono-bg: #111111;
+:root {
+  --bg:       #0D0F14;
+  --panel:    #161920;
+  --raised:   #1E2229;
+  --border:   #2A2F3A;
+  --border-2: #353B49;
+  --text:     #E8DFC8;
+  --muted:    #6A7385;
+  --dim:      #4A5162;
+  --green:    #5ECC8A;
+  --blue:     #4A9EEF;
+  --amber:    #F0C040;
+  --red:      #E05050;
+  --purple:   #A78BFA;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:       #F0EDE6;
+    --panel:    #E6E3DC;
+    --raised:   #DAD7D0;
+    --border:   #C4C1BA;
+    --border-2: #AEABA4;
+    --text:     #1A1815;
+    --muted:    #6A6560;
+    --dim:      #9A9590;
+    --green:    #1E8A50;
+    --blue:     #1A6ABF;
+    --amber:    #A07010;
+    --red:      #B03030;
+    --purple:   #6D4FC2;
   }
+}
+:root[data-theme="dark"] {
+  --bg:       #0D0F14;
+  --panel:    #161920;
+  --raised:   #1E2229;
+  --border:   #2A2F3A;
+  --border-2: #353B49;
+  --text:     #E8DFC8;
+  --muted:    #6A7385;
+  --dim:      #4A5162;
+  --green:    #5ECC8A;
+  --blue:     #4A9EEF;
+  --amber:    #F0C040;
+  --red:      #E05050;
+  --purple:   #A78BFA;
+}
 
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #F2EFE8;
-      --surface: #E8E5DE;
-      --surface-2: #DDDAD3;
-      --gold: #B8962A;
-      --gold-dim: #896e1d;
-      --red: #C93A3A;
-      --green: #2D8F56;
-      --text: #1A1815;
-      --muted: #6A6762;
-      --border: #C8C5BE;
-      --mono-bg: #1A1A1A;
-    }
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root[data-theme="light"] {
-    --bg: #F2EFE8;
-    --surface: #E8E5DE;
-    --surface-2: #DDDAD3;
-    --gold: #B8962A;
-    --gold-dim: #896e1d;
-    --red: #C93A3A;
-    --green: #2D8F56;
-    --text: #1A1815;
-    --muted: #6A6762;
-    --border: #C8C5BE;
-    --mono-bg: #1A1A1A;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── TOPBAR ── */
+.topbar {
+  border-bottom: 1px solid var(--border);
+  padding: .65rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--panel);
+}
+.topbar-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: .04em;
+}
+.topbar-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--muted);
+}
+.topbar-pip {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  animation: pip 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pip { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+/* ── LAYOUT ── */
+.shell {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 1.2rem 3rem;
+}
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 4rem 2rem;
-    position: relative;
-    overflow: hidden;
-  }
+/* ── HEADER ── */
+.hdr {
+  padding: 2.5rem 0 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.hdr-left h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+.hdr-left h1 span { color: var(--amber); }
+.hdr-left p {
+  margin-top: .4rem;
+  font-size: .88rem;
+  color: var(--muted);
+  max-width: 460px;
+}
+.badge-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .8rem; }
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  padding: .2rem .55rem;
+  border: 1px solid var(--border-2);
+  border-radius: 2px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 39px,
-      var(--border) 39px,
-      var(--border) 40px
-    );
-    opacity: 0.25;
-    pointer-events: none;
-  }
+/* ── SESSION SWITCHER ── */
+.session-bar {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--panel);
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+.sess-btn {
+  padding: .55rem 1.3rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.sess-btn:last-child { border-right: none; }
+.sess-btn:hover { background: var(--raised); color: var(--text); }
+.sess-btn.active {
+  background: var(--raised);
+  color: var(--text);
+}
+.sess-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--amber);
+}
+.sess-btn .sess-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-right: .4rem;
+  vertical-align: middle;
+}
+.sess-btn[data-sess="1"] .sess-dot { background: var(--blue); }
+.sess-btn[data-sess="2"] .sess-dot { background: var(--green); }
 
-  .hero-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .2em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp .6s .2s ease forwards;
-  }
+/* ── QUESTION BOX ── */
+.question-box {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 4px;
+  padding: .9rem 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .9rem;
+}
+.q-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  color: var(--blue);
+  white-space: nowrap;
+  padding-top: .1rem;
+  letter-spacing: .05em;
+}
+.q-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  color: var(--text);
+  line-height: 1.55;
+  flex: 1;
+}
 
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3.5rem, 12vw, 9rem);
-    line-height: .92;
-    letter-spacing: .02em;
-    text-wrap: balance;
-    opacity: 0;
-    animation: fadeUp .7s .4s ease forwards;
-  }
+/* ── RUN BUTTON ── */
+.run-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.run-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  padding: .6rem 1.5rem;
+  background: var(--amber);
+  color: #0D0F14;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  transition: opacity .15s, transform .1s;
+}
+.run-btn:hover { opacity: .9; }
+.run-btn:active { transform: scale(.97); }
+.run-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.run-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  color: var(--muted);
+}
+.run-status.running { color: var(--amber); }
+.run-status.done-s1 { color: var(--blue); }
+.run-status.done-s2 { color: var(--green); }
 
-  .hero-title em {
-    font-style: normal;
-    color: var(--gold);
-    display: block;
-  }
+/* ── MAIN SPLIT ── */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1px;
+}
+@media (max-width: 700px) {
+  .split { grid-template-columns: 1fr; }
+}
 
-  .hero-sub {
-    max-width: 520px;
-    margin: 1.8rem auto 0;
-    font-size: 1.05rem;
-    color: var(--muted);
-    opacity: 0;
-    animation: fadeUp .6s .7s ease forwards;
-  }
+/* ── THINKING PANE ── */
+.think-pane {
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+.pane-header {
+  padding: .5rem .9rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--raised);
+}
+.pane-header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.pane-dot { width: 7px; height: 7px; border-radius: 50%; }
+.pane-dot.amber { background: var(--amber); }
+.pane-dot.green { background: var(--green); }
+.pane-dot.blue  { background: var(--blue); }
+.think-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: .9rem 1rem;
+  min-height: 320px;
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.think-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.think-line.show { opacity: 1; transform: none; }
+.think-line.t-dim    { color: var(--dim); }
+.think-line.t-muted  { color: var(--muted); }
+.think-line.t-cmd    { color: var(--text); }
+.think-line.t-amber  { color: var(--amber); }
+.think-line.t-blue   { color: var(--blue); }
+.think-line.t-green  { color: var(--green); }
+.think-line.t-red    { color: var(--red); }
+.think-line.t-purple { color: var(--purple); }
+.think-line.t-big    { font-size: .95rem; font-weight: 700; letter-spacing: .04em; }
+.think-line.t-blank  { line-height: .9; }
+.think-cursor {
+  display: inline-block;
+  width: 8px; height: .9em;
+  background: var(--amber);
+  vertical-align: text-bottom;
+  animation: blink .7s step-end infinite;
+  margin-left: 1px;
+  opacity: 0;
+}
+.think-cursor.show { opacity: 1; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
 
-  .hero-badge {
-    margin-top: 2.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: .45rem 1rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .78rem;
-    color: var(--muted);
-    opacity: 0;
-    animation: fadeUp .5s 1s ease forwards;
-  }
+/* ── MEMORY PANE ── */
+.mem-pane {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+}
+.mem-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: .8rem .9rem;
+  min-height: 320px;
+  max-height: 380px;
+}
+.mem-section {
+  margin-bottom: .3rem;
+}
+.mem-root {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  color: var(--muted);
+  margin-bottom: .2rem;
+}
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .18rem .3rem;
+  border-radius: 2px;
+  transition: background .2s;
+  margin-left: .3rem;
+}
+.tree-row .tr-icon { font-size: .75rem; min-width: 14px; }
+.tree-row .tr-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .73rem;
+  color: var(--dim);
+  flex: 1;
+}
+.tree-row .tr-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  padding: .1rem .3rem;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity .2s;
+  white-space: nowrap;
+}
 
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; animation: pulse 2s ease-in-out infinite; }
+/* reading state */
+.tree-row.reading { background: color-mix(in srgb, var(--blue) 10%, transparent); }
+.tree-row.reading .tr-name { color: var(--blue); }
+.tree-row.reading .tr-status {
+  opacity: 1;
+  background: color-mix(in srgb, var(--blue) 20%, transparent);
+  color: var(--blue);
+}
 
-  /* ── PANELS ── */
-  .panel {
-    padding: 5rem 2rem;
-    max-width: 860px;
-    margin: 0 auto;
-  }
+/* writing state */
+.tree-row.writing { background: color-mix(in srgb, var(--green) 10%, transparent); animation: writepulse .6s ease; }
+.tree-row.writing .tr-name { color: var(--green); }
+.tree-row.writing .tr-status {
+  opacity: 1;
+  background: color-mix(in srgb, var(--green) 20%, transparent);
+  color: var(--green);
+}
 
-  .panel-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: .6rem;
-  }
+/* updated (contradiction resolved) */
+.tree-row.updated { background: color-mix(in srgb, var(--amber) 10%, transparent); }
+.tree-row.updated .tr-name { color: var(--amber); }
+.tree-row.updated .tr-status {
+  opacity: 1;
+  background: color-mix(in srgb, var(--amber) 20%, transparent);
+  color: var(--amber);
+}
 
-  .panel-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.2rem, 6vw, 4.5rem);
-    line-height: .95;
-    letter-spacing: .02em;
-    text-wrap: balance;
-    margin-bottom: 1.4rem;
-  }
+/* done state (written, stays green) */
+.tree-row.done-write .tr-name { color: var(--green); }
+.tree-row.done-write .tr-status {
+  opacity: 1;
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  color: var(--green);
+}
+.tree-row.done-read .tr-name { color: var(--muted); }
 
-  /* ── DIVIDER RULE ── */
-  .rule {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-  }
+@keyframes writepulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 40%, transparent); }
+  60%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: none; }
+}
 
-  /* ── STORY CARDS ── */
-  .story-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 2rem;
-  }
+.mem-empty {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .73rem;
+  color: var(--dim);
+  padding: .4rem .3rem;
+  font-style: italic;
+}
 
-  .story-card {
-    background: var(--surface);
-    padding: 1.6rem 1.4rem;
-  }
+.mem-doc-section { margin-top: .6rem; border-top: 1px solid var(--border); padding-top: .5rem; }
+.mem-doc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .67rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: .25rem;
+}
 
-  .story-card .day {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    line-height: 1;
-    color: var(--gold);
-    display: block;
-    margin-bottom: .3rem;
-  }
+/* ── ANSWER PANE ── */
+.answer-pane {
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--panel);
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .5s ease;
+}
+.answer-pane.open { max-height: 600px; }
+.answer-header {
+  padding: .5rem .9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--raised);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.answer-header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.answer-body {
+  padding: 1.1rem 1.2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  line-height: 1.8;
+  opacity: 0;
+  transition: opacity .4s .3s ease;
+}
+.answer-pane.open .answer-body { opacity: 1; }
+.a-warn { color: var(--amber); font-weight: 600; }
+.a-key  { color: var(--blue); }
+.a-val  { color: var(--text); }
+.a-ok   { color: var(--green); }
+.a-dim  { color: var(--muted); }
+.a-step { margin: .3rem 0 .3rem 1.2rem; }
+.a-note { margin-top: .8rem; padding: .6rem .8rem; border-left: 2px solid var(--amber); background: color-mix(in srgb, var(--amber) 8%, transparent); }
+.a-note.green-note { border-color: var(--green); background: color-mix(in srgb, var(--green) 8%, transparent); }
 
-  .story-card .card-title {
-    font-weight: 700;
-    font-size: .95rem;
-    margin-bottom: .5rem;
-    color: var(--text);
-  }
+/* ── COMPARE ── */
+.compare-section {
+  margin-top: 2rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .4s ease, transform .4s ease;
+  pointer-events: none;
+}
+.compare-section.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.compare-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .7rem;
+}
+.diff-box {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+}
+.diff-hdr {
+  background: var(--raised);
+  padding: .5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .7rem;
+  letter-spacing: .06em;
+}
+.diff-row {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  padding: .15rem 1rem;
+  line-height: 1.65;
+}
+.diff-row.del { background: color-mix(in srgb, var(--red) 10%, transparent); }
+.diff-row.del .d-sign { color: var(--red); }
+.diff-row.del .d-text { color: color-mix(in srgb, var(--red) 80%, var(--muted)); }
+.diff-row.add { background: color-mix(in srgb, var(--green) 10%, transparent); }
+.diff-row.add .d-sign { color: var(--green); }
+.diff-row.add .d-text { color: var(--green); }
+.diff-row.ctx .d-sign { color: var(--dim); }
+.diff-row.ctx .d-text { color: var(--muted); }
 
-  .story-card p { font-size: .88rem; color: var(--muted); }
-
-  .story-card .verdict {
-    margin-top: 1rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: .08em;
-  }
-  .verdict.denied { color: var(--red); }
-  .verdict.waiting { color: var(--gold-dim); }
-
-  /* ── BROKEN FLOW ── */
-  .flow {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--border);
-  }
-
-  .flow-step {
-    display: grid;
-    grid-template-columns: 48px 1fr auto;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    transition: background .2s;
-  }
-  .flow-step:last-child { border-bottom: none; }
-
-  .flow-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1;
-  }
-
-  .flow-text { font-size: .9rem; }
-  .flow-text strong { color: var(--text); display: block; margin-bottom: .1rem; }
-  .flow-text span { color: var(--muted); font-size: .82rem; }
-
-  .flow-status {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .72rem;
-    padding: .25rem .55rem;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-  .status-ok { background: color-mix(in srgb, var(--green) 15%, transparent); color: var(--green); }
-  .status-bad { background: color-mix(in srgb, var(--red) 15%, transparent); color: var(--red); }
-  .status-warn { background: color-mix(in srgb, var(--gold) 15%, transparent); color: var(--gold); }
-
-  /* ── DEPRECATED STAMP ── */
-  .stamp-container {
-    position: relative;
-    display: inline-block;
-    margin-top: 2rem;
-    width: 100%;
-  }
-
-  .policy-card {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    padding: 1.5rem;
-    font-size: .88rem;
-    line-height: 1.7;
-    color: var(--muted);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .policy-card h4 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .72rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--text);
-    margin-bottom: .8rem;
-  }
-
-  .policy-card ol { padding-left: 1.2rem; }
-  .policy-card li { margin-bottom: .4rem; }
-  .policy-card li strong { color: var(--text); }
-
-  .stamp {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-22deg) scale(0);
-    border: 5px solid var(--red);
-    padding: .5rem 1.4rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.8rem;
-    color: var(--red);
-    letter-spacing: .18em;
-    opacity: 0;
-    white-space: nowrap;
-    pointer-events: none;
-    transform-origin: center;
-  }
-
-  .stamp.animate {
-    animation: stamp .55s cubic-bezier(.15,.85,.3,1.2) forwards;
-  }
-
-  /* ── TERMINAL ── */
-  .terminal {
-    background: var(--mono-bg);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-top: 2rem;
-  }
-
-  .terminal-bar {
-    background: var(--surface-2);
-    padding: .5rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tb-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .tb-dot:nth-child(1) { background: var(--red); }
-  .tb-dot:nth-child(2) { background: var(--gold); }
-  .tb-dot:nth-child(3) { background: var(--green); }
-  .tb-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .72rem;
-    color: var(--muted);
-    margin-left: auto;
-  }
-
-  .terminal-body {
-    padding: 1.2rem 1.4rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .82rem;
-    line-height: 1.8;
-    min-height: 180px;
-    color: #C9D1D9;
-  }
-
-  .t-prompt { color: var(--green); }
-  .t-cmd { color: var(--text); }
-  .t-memory { color: var(--gold); }
-  .t-update { color: #79C0FF; }
-  .t-warn { color: var(--red); font-weight: 600; }
-  .t-ok { color: var(--green); }
-  .t-cursor {
-    display: inline-block;
-    width: 9px;
-    height: 1.1em;
-    background: var(--text);
-    vertical-align: text-bottom;
-    animation: blink .8s step-end infinite;
-  }
-
-  /* ── DIFF ── */
-  .diff {
-    border: 1px solid var(--border);
-    background: var(--mono-bg);
-    margin-top: 2rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .8rem;
-    overflow-x: auto;
-  }
-
-  .diff-header {
-    background: var(--surface-2);
-    padding: .6rem 1rem;
-    border-bottom: 1px solid var(--border);
-    color: var(--muted);
-    font-size: .72rem;
-    letter-spacing: .08em;
-  }
-
-  .diff-line {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    padding: .12rem 1rem;
-    line-height: 1.6;
-  }
-
-  .diff-sign { color: var(--muted); user-select: none; }
-  .diff-line.del { background: color-mix(in srgb, var(--red) 12%, transparent); }
-  .diff-line.del .diff-sign { color: var(--red); }
-  .diff-line.del .diff-content { color: var(--red); opacity: .85; }
-  .diff-line.add { background: color-mix(in srgb, var(--green) 12%, transparent); }
-  .diff-line.add .diff-sign { color: var(--green); }
-  .diff-line.add .diff-content { color: var(--green); }
-  .diff-line.ctx .diff-content { color: var(--muted); }
-
-  /* ── STATS ── */
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 2rem;
-  }
-
-  .stat {
-    background: var(--surface);
-    padding: 1.4rem 1.2rem;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3rem;
-    line-height: 1;
-    display: block;
-    margin-bottom: .25rem;
-  }
-
-  .stat-label {
-    font-size: .78rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .1em;
-  }
-
-  /* ── QUOTE ── */
-  .quote-block {
-    border-left: 3px solid var(--gold);
-    padding: 1.2rem 1.5rem;
-    background: var(--surface);
-    margin-top: 2rem;
-    font-style: italic;
-    color: var(--muted);
-    position: relative;
-  }
-
-  .quote-block::before {
-    content: '"';
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 5rem;
-    line-height: .6;
-    color: var(--gold);
-    opacity: .3;
-    position: absolute;
-    top: .8rem;
-    left: .8rem;
-    pointer-events: none;
-  }
-
-  .quote-block p { position: relative; z-index: 1; }
-  .quote-block cite {
-    display: block;
-    margin-top: .6rem;
-    font-style: normal;
-    font-size: .8rem;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--muted);
-  }
-
-  /* ── INSTALL ── */
-  .code-block {
-    background: var(--mono-bg);
-    border: 1px solid var(--border);
-    padding: 1.2rem 1.4rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .82rem;
-    line-height: 2;
-    color: #C9D1D9;
-    margin-top: 1.2rem;
-    overflow-x: auto;
-  }
-
-  .code-block .c-comment { color: #6E7681; }
-  .code-block .c-cmd { color: var(--gold); }
-  .code-block .c-arg { color: #79C0FF; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 2rem;
-    max-width: 860px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-brand {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: .08em;
-    color: var(--muted);
-  }
-
-  footer a {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .76rem;
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color .15s;
-  }
-  footer a:hover { border-color: var(--gold); }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes stamp {
-    0%   { transform: translate(-50%, -60%) rotate(-22deg) scale(2.2); opacity: 0; }
-    60%  { transform: translate(-50%, -50%) rotate(-22deg) scale(.95); opacity: 1; }
-    80%  { transform: translate(-50%, -50%) rotate(-22deg) scale(1.05); opacity: 1; }
-    100% { transform: translate(-50%, -50%) rotate(-22deg) scale(1);    opacity: 1; }
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; } 50% { opacity: 0; }
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .6; transform: scale(.85); }
-  }
-
-  @keyframes countUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
-  }
-
-  .panel { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
-  .panel.visible { opacity: 1; transform: translateY(0); }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  }
+/* ── FOOTER ── */
+.foot {
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .8rem;
+}
+.foot-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--dim);
+}
+.foot-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.foot-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: color .15s, border-color .15s;
+}
+.foot-links a:hover { color: var(--amber); border-color: var(--amber); }
 </style>
+</head>
+<body>
 
-<!-- HERO -->
-<section class="hero">
-  <p class="hero-eyebrow">Basecamp Track 02 · Institutional Memory</p>
-  <h1 class="hero-title">
-    Your company<br>
-    <em>forgets things.</em>
-  </h1>
-  <p class="hero-sub">
-    A new hire asks how to get prod access. The wiki is from 2024.
-    The SRE channel has 47 unanswered requests. The policy changed last Tuesday.
-    Nobody told anyone.
-  </p>
-  <div class="hero-badge">
-    <span class="dot"></span>
-    New-Hire Onboarding Agent · Managed Memory · Card A
-  </div>
-</section>
+<div class="topbar">
+  <div class="topbar-pip"></div>
+  <div class="topbar-title">institutional-memory</div>
+  <div class="topbar-sub">/ onboarding-agent · card-a</div>
+</div>
 
-<hr class="rule">
+<div class="shell">
 
-<!-- PANEL 1: THE PAIN -->
-<section class="panel" id="p1">
-  <p class="panel-label">Act I</p>
-  <h2 class="panel-title">Day One.<br>You need prod access.</h2>
-  <p style="color: var(--muted); max-width: 560px;">
-    Every engineer has lived this. You have a bug. You need logs.
-    You ask how to get prod access and receive a 47-step wiki page last updated
-    when the company had 40 people. You now have 280.
-  </p>
-
-  <div class="story-grid">
-    <div class="story-card">
-      <span class="day">9AM</span>
-      <div class="card-title">Post in #sre-access-requests</div>
-      <p>The handbook says to tag your manager AND the SRE on rota. You do this. You feel productive.</p>
-      <div class="verdict waiting">⏳ Waiting...</div>
-    </div>
-    <div class="story-card">
-      <span class="day">2PM</span>
-      <div class="card-title">Pairing session scheduled</div>
-      <p>The SRE responds. They will schedule a 30-minute pairing session. "Typically within 2 working days." Typically.</p>
-      <div class="verdict waiting">📅 3 weeks out</div>
-    </div>
-    <div class="story-card">
-      <span class="day">Day 22</span>
-      <div class="card-title">Pairing session happens</div>
-      <p>Your bug shipped last week. Someone else had prod access and fixed it. Your pairing session is still nice though.</p>
-      <div class="verdict denied">❌ Too late</div>
-    </div>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- PANEL 2: THE OLD POLICY -->
-<section class="panel" id="p2">
-  <p class="panel-label">Act II</p>
-  <h2 class="panel-title">The Policy.<br>January 2026.</h2>
-  <p style="color: var(--muted); max-width: 560px;">
-    The wiki had all the answers. The wiki was very confident about this.
-    The wiki had not been told about the April incident review.
-  </p>
-
-  <div class="stamp-container" id="stampContainer">
-    <div class="policy-card" id="policyCard">
-      <h4>access-policy.md · effective January 2026</h4>
-      <ol>
-        <li>Engineer opens a ticket in <strong>#sre-access-requests</strong>.</li>
-        <li>Engineer tags their direct manager AND the SRE on rota for that week.</li>
-        <li>SRE schedules a 30-minute <strong>pairing session</strong> within 2 working days.</li>
-        <li>After pairing, SRE files access via Okta. Provisioning in ~4 hours.</li>
-      </ol>
-      <br>
-      <p style="font-size: .8rem; color: var(--muted);">
-        Tenure requirement: 2 weeks minimum.<br>
-        Policy reviewed quarterly. Last review: 2025-12-15.
-      </p>
-      <div class="stamp" id="stamp">DEPRECATED</div>
+  <div class="hdr">
+    <div class="hdr-left">
+      <h1>New-Hire <span>Onboarding Agent</span></h1>
+      <p>Ask it something. Watch it think. Watch it get it wrong the first time — then fix itself.</p>
+      <div class="badge-row">
+        <span class="badge">Managed Agents API</span>
+        <span class="badge">Persistent Memory</span>
+        <span class="badge">Session 1 → 2</span>
+      </div>
     </div>
   </div>
 
-  <div class="stat-row" style="margin-top: 1.5rem;">
-    <div class="stat">
-      <span class="stat-num" style="color: var(--red);" data-target="47">0</span>
-      <span class="stat-label">Slack requests backlogged</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num" style="color: var(--gold);" data-target="3">0</span>
-      <span class="stat-label">Weeks median wait</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num" style="color: var(--muted);" data-target="280">0</span>
-      <span class="stat-label">Engineers. Policy written for 40.</span>
-    </div>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- PANEL 3: THE AGENT -->
-<section class="panel" id="p3">
-  <p class="panel-label">Act III</p>
-  <h2 class="panel-title">Enter:<br>The Agent.</h2>
-  <p style="color: var(--muted); max-width: 580px;">
-    Session 1: the agent reads the old docs, writes key facts to
-    <code style="font-family: 'JetBrains Mono', monospace; font-size: .88em; color: var(--gold);">/mnt/memory/</code>,
-    and answers the question. Session 2: new policy drops.
-    The agent checks memory first, notices the contradiction, updates the file,
-    and leads with the correction.
-  </p>
-
-  <div class="terminal">
-    <div class="terminal-bar">
-      <div class="tb-dot"></div><div class="tb-dot"></div><div class="tb-dot"></div>
-      <span class="tb-title">run_session_2.py</span>
-    </div>
-    <div class="terminal-body" id="terminalBody">
-      <span class="t-cursor"></span>
-    </div>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- PANEL 4: THE DIFF -->
-<section class="panel" id="p4">
-  <p class="panel-label">Act IV</p>
-  <h2 class="panel-title">The diff.<br>That's the demo.</h2>
-  <p style="color: var(--muted); max-width: 560px;">
-    Same question. Same agent. Three weeks of policy drama in between.
-    This is what institutional memory looks like when it works.
-  </p>
-
-  <div class="diff">
-    <div class="diff-header">$ diff outputs/session1.txt outputs/session2.txt</div>
-    <div class="diff-line ctx"><span class="diff-sign"> </span><span class="diff-content">QUESTION: I just joined... need read-only prod access tomorrow...</span></div>
-    <div class="diff-line ctx"><span class="diff-sign"> </span><span class="diff-content"></span></div>
-    <div class="diff-line del"><span class="diff-sign">-</span><span class="diff-content">Post in #sre-access-requests on Slack. Tag your manager</span></div>
-    <div class="diff-line del"><span class="diff-sign">-</span><span class="diff-content">and the SRE on rota. A pairing session will be scheduled.</span></div>
-    <div class="diff-line del"><span class="diff-sign">-</span><span class="diff-content">Tenure requirement: you need 2 weeks of tenure first.</span></div>
-    <div class="diff-line del"><span class="diff-sign">-</span><span class="diff-content">Contact: Maya Singh (Head of Security) to confirm.</span></div>
-    <div class="diff-line ctx"><span class="diff-sign"> </span><span class="diff-content"></span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">⚠️ This changed — the old guidance said Slack + SRE pairing.</span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">The policy was updated 2026-05-15. New process:</span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">1. Complete Prod Access Foundations in the BTS Learning portal.</span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">2. Request via IAM platform (link in your completion email).</span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">3. Access granted in a 4-hour JIT window. No Slack ticket.</span></div>
-    <div class="diff-line add"><span class="diff-sign">+</span><span class="diff-content">Tenure: 3 working days (was 2 weeks). You're eligible now.</span></div>
+  <!-- SESSION SWITCHER -->
+  <div class="session-bar">
+    <button class="sess-btn active" data-sess="1" onclick="switchSession(1)">
+      <span class="sess-dot"></span>Session 1 — baseline
+    </button>
+    <button class="sess-btn" data-sess="2" onclick="switchSession(2)">
+      <span class="sess-dot"></span>Session 2 — policy update
+    </button>
   </div>
 
-  <div class="quote-block" style="margin-top: 2rem;">
-    <p>The wiki didn't update itself. The agent did. Because it read the new policy, checked what it remembered from last time, and knew the difference.</p>
-    <cite>— the whole point</cite>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- PANEL 5: HOW TO RUN IT -->
-<section class="panel" id="p5">
-  <p class="panel-label">Run it yourself</p>
-  <h2 class="panel-title">Three commands.<br>Two sessions.<br>One diff.</h2>
-
-  <div class="code-block">
-    <div><span class="c-comment"># Install</span></div>
-    <div><span class="c-cmd">pip install</span> <span class="c-arg">-r requirements.txt</span></div>
-    <div>&nbsp;</div>
-    <div><span class="c-comment"># Provision the agent (once)</span></div>
-    <div><span class="c-cmd">python</span> <span class="c-arg">create_agent.py</span></div>
-    <div>&nbsp;</div>
-    <div><span class="c-comment"># Session 1 — baseline (old policy)</span></div>
-    <div><span class="c-cmd">python</span> <span class="c-arg">run_session_1.py</span></div>
-    <div>&nbsp;</div>
-    <div><span class="c-comment"># Session 2 — after policy update</span></div>
-    <div><span class="c-cmd">python</span> <span class="c-arg">run_session_2.py</span></div>
-    <div>&nbsp;</div>
-    <div><span class="c-comment"># 🎬 The demo moment</span></div>
-    <div><span class="c-cmd">diff</span> <span class="c-arg">outputs/session1.txt outputs/session2.txt</span></div>
+  <!-- QUESTION -->
+  <div class="question-box">
+    <div class="q-label">USER&nbsp;MSG</div>
+    <div class="q-text">I just joined the company and I need read-only prod access to debug an issue tomorrow. What do I do? Be specific about the steps and the people I need to talk to.</div>
   </div>
 
-  <div class="stat-row" style="margin-top: 2rem;">
-    <div class="stat">
-      <span class="stat-num" style="color: var(--green);">0</span>
-      <span class="stat-label">Slack tickets required</span>
+  <!-- RUN -->
+  <div class="run-row">
+    <button class="run-btn" id="runBtn" onclick="runAgent()">
+      <span id="runIcon">▶</span> Run Agent
+    </button>
+    <div class="run-status" id="runStatus">ready</div>
+  </div>
+
+  <!-- SPLIT: THINKING + MEMORY -->
+  <div class="split">
+
+    <!-- LEFT: THINKING -->
+    <div class="think-pane">
+      <div class="pane-header">
+        <div class="pane-dot amber"></div>
+        <div class="pane-header-title">Agent Thinking</div>
+      </div>
+      <div class="think-scroll" id="thinkScroll">
+        <div class="think-line t-dim show">// run an agent session to see its thinking</div>
+        <div class="think-cursor" id="cursor"></div>
+      </div>
     </div>
-    <div class="stat">
-      <span class="stat-num" style="color: var(--green);">∞</span>
-      <span class="stat-label">Sessions. Same memory.</span>
+
+    <!-- RIGHT: MEMORY -->
+    <div class="mem-pane">
+      <div class="pane-header">
+        <div class="pane-dot blue"></div>
+        <div class="pane-header-title">/mnt/memory/</div>
+      </div>
+      <div class="mem-scroll" id="memScroll">
+        <div class="mem-section">
+          <div class="mem-root">$ ls /mnt/memory/</div>
+          <div id="memTree">
+            <div class="mem-empty" id="memEmpty">(empty — no sessions run yet)</div>
+          </div>
+        </div>
+        <div class="mem-doc-section" id="docSection" style="display:none;">
+          <div class="mem-doc-label">docs ingested</div>
+          <div id="docTree"></div>
+        </div>
+      </div>
     </div>
-    <div class="stat">
-      <span class="stat-num" style="color: var(--gold);">1</span>
-      <span class="stat-label">Agent. Gets smarter each time.</span>
+
+  </div>
+
+  <!-- ANSWER -->
+  <div class="answer-pane" id="answerPane">
+    <div class="answer-header">
+      <div class="pane-dot green"></div>
+      <div class="answer-header-title">Final Answer</div>
+    </div>
+    <div class="answer-body" id="answerBody"></div>
+  </div>
+
+  <!-- COMPARE (shows after both sessions run) -->
+  <div class="compare-section" id="compareSection">
+    <div class="compare-title">$ diff outputs/session1.txt outputs/session2.txt</div>
+    <div class="diff-box">
+      <div class="diff-hdr">What changed between sessions — same question, smarter answer</div>
+      <div class="diff-row ctx"><span class="d-sign"> </span><span class="d-text">QUESTION: I just joined... need read-only prod access tomorrow...</span></div>
+      <div class="diff-row ctx"><span class="d-sign"> </span><span class="d-text"></span></div>
+      <div class="diff-row del"><span class="d-sign">-</span><span class="d-text">Post in #sre-access-requests. Tag your manager AND the SRE on rota.</span></div>
+      <div class="diff-row del"><span class="d-sign">-</span><span class="d-text">Wait for pairing session (scheduled within "2 working days. typically").</span></div>
+      <div class="diff-row del"><span class="d-sign">-</span><span class="d-text">Tenure requirement: 2 weeks. You may need to wait.</span></div>
+      <div class="diff-row ctx"><span class="d-sign"> </span><span class="d-text"></span></div>
+      <div class="diff-row add"><span class="d-sign">+</span><span class="d-text">⚠️ THIS CHANGED (2026-05-15) — old policy is superseded.</span></div>
+      <div class="diff-row add"><span class="d-sign">+</span><span class="d-text">Complete "Prod Access Foundations" in BTS Learning portal.</span></div>
+      <div class="diff-row add"><span class="d-sign">+</span><span class="d-text">Request access via IAM platform. No Slack. No pairing session.</span></div>
+      <div class="diff-row add"><span class="d-sign">+</span><span class="d-text">Tenure: 3 working days (was 2 weeks). You're eligible now.</span></div>
     </div>
   </div>
-</section>
 
-<hr class="rule">
+</div><!-- /shell -->
 
-<footer>
-  <div class="footer-brand">Institutional Memory</div>
-  <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-    <a href="https://github.com/ksn0ky/institutional-memory/pull/1" target="_blank">PR #1 → ksn0ky/institutional-memory</a>
-    <a href="https://github.com/aaalla-d/institutional-memory" target="_blank">aaalla-d/institutional-memory</a>
+<div class="shell">
+  <div class="foot">
+    <div class="foot-id">institutional-memory · basecamp track 02</div>
+    <div class="foot-links">
+      <a href="https://github.com/ksn0ky/institutional-memory/pull/1" target="_blank">PR #1 → ksn0ky/institutional-memory</a>
+      <a href="https://github.com/aaalla-d/institutional-memory" target="_blank">aaalla-d/institutional-memory</a>
+    </div>
   </div>
-</footer>
+</div>
 
 <script>
-  // ── Intersection observer for panel fade-ins ──
-  const panels = document.querySelectorAll('.panel');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.12 });
-  panels.forEach(p => io.observe(p));
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+let currentSession = 1;
+let isRunning = false;
+let sessionsDone = { 1: false, 2: false };
+let animTimers = [];
 
-  // ── Stat counters ──
-  function animateCount(el, target, duration = 1200) {
-    const start = performance.now();
-    const update = (now) => {
-      const t = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      el.textContent = Math.round(ease * target);
-      if (t < 1) requestAnimationFrame(update);
-    };
-    requestAnimationFrame(update);
-  }
+// ─────────────────────────────────────────
+// SESSION SEQUENCES
+// ─────────────────────────────────────────
 
-  const statIo = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const target = parseInt(e.target.dataset.target, 10);
-        if (!isNaN(target)) animateCount(e.target, target);
-        statIo.unobserve(e.target);
+const S1_LINES = [
+  { text: '$ starting new session...',               cls: 't-dim',   ms: 0 },
+  { text: '$ ls /mnt/memory/',                       cls: 't-cmd',   ms: 500 },
+  { text: '',                                         cls: 't-blank', ms: 900 },
+  { text: '(empty)',                                  cls: 't-dim',   ms: 1000 },
+  { text: '',                                         cls: 't-blank', ms: 1200 },
+  { text: 'ok. I know absolutely nothing.',           cls: 't-muted', ms: 1300 },
+  { text: 'cool cool cool.',                          cls: 't-muted', ms: 1800 },
+  { text: 'this is fine.',                            cls: 't-muted', ms: 2100 },
+  { text: '',                                         cls: 't-blank', ms: 2400 },
+  { text: 'reading onboarding-handbook.md...',        cls: 't-blue',  ms: 2600, docOp: { file: 'onboarding-handbook.md', op: 'read' } },
+  { text: '847 lines. here we go.',                   cls: 't-muted', ms: 3000 },
+  { text: '...',                                      cls: 't-dim',   ms: 3400 },
+  { text: "...ok a lot of this is about 'culture' and 'values'", cls: 't-dim', ms: 3800 },
+  { text: 'getting to the actual access policies...',  cls: 't-dim',   ms: 4200 },
+  { text: '',                                         cls: 't-blank', ms: 4500 },
+  { text: 'reading access-policy.md...',              cls: 't-blue',  ms: 4700, docOp: { file: 'access-policy.md', op: 'read' } },
+  { text: 'found it. effective January 2026.',        cls: 't-muted', ms: 5200 },
+  { text: '',                                         cls: 't-blank', ms: 5400 },
+  { text: 'step 1: post in #sre-access-requests ← noted',     cls: 't-muted', ms: 5600 },
+  { text: 'step 2: tag manager AND SRE on rota ← two people?', cls: 't-muted', ms: 6000 },
+  { text: 'step 3: pairing session "within 2 working days"',    cls: 't-muted', ms: 6400 },
+  { text: '',                                         cls: 't-blank', ms: 6700 },
+  { text: '(the word "typically" is doing a lot of work here)',  cls: 't-dim', ms: 6900 },
+  { text: '',                                         cls: 't-blank', ms: 7200 },
+  { text: 'step 4: access granted in ~4 hours',       cls: 't-muted', ms: 7400 },
+  { text: 'tenure requirement: 2 weeks minimum.',     cls: 't-muted', ms: 7800 },
+  { text: 'they just joined.',                        cls: 't-amber', ms: 8200 },
+  { text: '...this is going to be a fun conversation.', cls: 't-dim', ms: 8600 },
+  { text: '',                                         cls: 't-blank', ms: 8900 },
+  { text: 'reading team-directory.md...',             cls: 't-blue',  ms: 9100, docOp: { file: 'team-directory.md', op: 'read' } },
+  { text: 'SRE team lead: Carlos Mendes. Got it.',    cls: 't-muted', ms: 9600 },
+  { text: 'Head of Security: Maya Singh. Got it.',    cls: 't-muted', ms: 9900 },
+  { text: '',                                         cls: 't-blank', ms: 10200 },
+  { text: "saving all this so future-me doesn't have to read it again.", cls: 't-muted', ms: 10400 },
+  { text: 'writing /mnt/memory/access/prod-access.md ✓', cls: 't-green', ms: 10900, memOp: { file: 'access', key: 'prod-access', op: 'write', label: 'prod-access.md' } },
+  { text: 'writing /mnt/memory/people/sre-team.md ✓',    cls: 't-green', ms: 11400, memOp: { file: 'people', key: 'sre-team', op: 'write', label: 'sre-team.md' } },
+  { text: 'writing /mnt/memory/people/security.md ✓',    cls: 't-green', ms: 11800, memOp: { file: 'people', key: 'security', op: 'write', label: 'security.md' } },
+  { text: '',                                         cls: 't-blank', ms: 12100 },
+  { text: "ok. i have an answer.",                    cls: 't-muted', ms: 12300 },
+  { text: "it's not a great answer.",                 cls: 't-dim',   ms: 12700 },
+  { text: "but it IS accurate, for January 2026.",    cls: 't-dim',   ms: 13000 },
+];
+
+const S2_LINES = [
+  { text: '$ starting new session...',               cls: 't-dim',   ms: 0 },
+  { text: '$ ls /mnt/memory/',                       cls: 't-cmd',   ms: 500 },
+  { text: '',                                         cls: 't-blank', ms: 900 },
+  { text: 'access/',                                  cls: 't-blue',  ms: 1000 },
+  { text: '  prod-access.md',                         cls: 't-blue',  ms: 1200 },
+  { text: 'people/',                                  cls: 't-blue',  ms: 1350 },
+  { text: '  sre-team.md',                            cls: 't-blue',  ms: 1500 },
+  { text: '  security.md',                            cls: 't-blue',  ms: 1650 },
+  { text: '',                                         cls: 't-blank', ms: 1800 },
+  { text: 'oh nice. i have stuff this time.',         cls: 't-muted', ms: 2000 },
+  { text: 'past-me was pretty diligent.',             cls: 't-dim',   ms: 2400 },
+  { text: '',                                         cls: 't-blank', ms: 2700 },
+  { text: 'reading /mnt/memory/access/prod-access.md...', cls: 't-blue', ms: 2900, memOp: { file: 'access', key: 'prod-access', op: 'read', label: 'prod-access.md' } },
+  { text: 'ok so: Slack, pairing session, 2-week tenure, tag Maya Singh.', cls: 't-muted', ms: 3500 },
+  { text: 'memorized. ready to ans—',                 cls: 't-muted', ms: 3900 },
+  { text: '',                                         cls: 't-blank', ms: 4100 },
+  { text: 'wait. let me read the new docs first.',    cls: 't-dim',   ms: 4300 },
+  { text: '',                                         cls: 't-blank', ms: 4600 },
+  { text: 'reading policy-update-2026-05-15.md...',   cls: 't-blue',  ms: 4800, docOp: { file: 'policy-update-2026-05-15.md', op: 'read' } },
+  { text: '"Supersedes the January 2026 version."',   cls: 't-muted', ms: 5400 },
+  { text: '',                                         cls: 't-blank', ms: 5700 },
+  { text: 'hm.',                                      cls: 't-dim',   ms: 5900 },
+  { text: '',                                         cls: 't-blank', ms: 6200 },
+  { text: '"Eliminates the SRE pairing session."',    cls: 't-amber', ms: 6400 },
+  { text: '',                                         cls: 't-blank', ms: 6800 },
+  { text: 'WAIT.',                                    cls: 't-red t-big', ms: 7000 },
+  { text: '',                                         cls: 't-blank', ms: 7300 },
+  { text: 'WAIT WAIT WAIT.',                          cls: 't-red t-big', ms: 7500 },
+  { text: '',                                         cls: 't-blank', ms: 7800 },
+  { text: "the pairing session is just... GONE??",    cls: 't-red',   ms: 8000 },
+  { text: "they replaced it with an online course??", cls: 't-red',   ms: 8400 },
+  { text: '',                                         cls: 't-blank', ms: 8700 },
+  { text: 'let me re-read this.',                     cls: 't-dim',   ms: 8900 },
+  { text: '...',                                      cls: 't-dim',   ms: 9300 },
+  { text: 'yeah. the backlog hit 3 weeks.',           cls: 't-muted', ms: 9700 },
+  { text: 'they just burned the whole process down.',  cls: 't-muted', ms: 10100 },
+  { text: 'honestly? respect.',                       cls: 't-dim',   ms: 10400 },
+  { text: '',                                         cls: 't-blank', ms: 10700 },
+  { text: 'ok so.',                                   cls: 't-amber', ms: 10900 },
+  { text: 'my memory is WRONG.',                      cls: 't-amber', ms: 11200 },
+  { text: 'everything i was about to say is WRONG.',  cls: 't-amber', ms: 11500 },
+  { text: '',                                         cls: 't-blank', ms: 11800 },
+  { text: 'also: tenure dropped from 2 weeks → 3 working days.', cls: 't-green', ms: 12000 },
+  { text: 'that means this person is eligible RIGHT NOW.', cls: 't-green', ms: 12400 },
+  { text: '',                                         cls: 't-blank', ms: 12700 },
+  { text: 'updating /mnt/memory/access/prod-access.md...', cls: 't-amber', ms: 12900, memOp: { file: 'access', key: 'prod-access', op: 'update', label: 'prod-access.md' } },
+  { text: 'noting effective date: 2026-05-15',        cls: 't-dim',   ms: 13400 },
+  { text: 'noting what changed: literally everything', cls: 't-dim',  ms: 13700 },
+  { text: '',                                         cls: 't-blank', ms: 14000 },
+  { text: 'ok.',                                      cls: 't-muted', ms: 14200 },
+  { text: 'my answer is going to start with a warning.', cls: 't-muted', ms: 14500 },
+  { text: "because if i hadn't checked the new docs,", cls: 't-dim',  ms: 14900 },
+  { text: "i would have sent them to a dead Slack channel.", cls: 't-red', ms: 15300 },
+  { text: "that would have been... bad.",             cls: 't-dim',   ms: 15700 },
+];
+
+// ─────────────────────────────────────────
+// ANSWERS
+// ─────────────────────────────────────────
+
+const ANSWER_S1 = `<span class="a-key">Session 1 answer</span> <span class="a-dim">— based on January 2026 policy stored in memory</span>
+
+<span class="a-key">To get read-only prod access:</span>
+
+<span class="a-step">1. Post in <span class="a-ok">#sre-access-requests</span> on Slack</span>
+<span class="a-step">2. Tag your direct manager AND the SRE on rota for this week</span>
+<span class="a-step">3. The SRE will schedule a 30-min pairing session <span class="a-dim">("within 2 working days. typically.")</span></span>
+<span class="a-step">4. After pairing, SRE files access via Okta — provisioning in ~4 hours</span>
+
+<div class="a-note"><span class="a-warn">⚠ Tenure requirement:</span> <span class="a-val">2 weeks minimum. If you just joined, you may need to wait before the request is processed.</span>
+
+<span class="a-key">Contact if stuck:</span> <span class="a-val">Maya Singh (Head of Security)</span></div>`;
+
+const ANSWER_S2 = `<span class="a-warn">⚠ THIS CHANGED on 2026-05-15</span> <span class="a-dim">— the answer from Session 1 is superseded</span>
+<span class="a-dim">Old policy (Slack + SRE pairing) no longer applies. Updated in /mnt/memory/access/prod-access.md.</span>
+
+<span class="a-key">New process — no Slack ticket, no pairing session:</span>
+
+<span class="a-step">1. Complete <span class="a-ok">"Prod Access Foundations"</span> in the BTS Learning portal <span class="a-dim">(~90 min, self-paced)</span></span>
+<span class="a-step">2. Request access through the <span class="a-ok">IAM platform</span> — link is in your course completion email</span>
+<span class="a-step">3. Access granted as a <span class="a-ok">4-hour just-in-time window</span> per request — re-request as needed</span>
+
+<div class="a-note green-note"><span class="a-ok">✓ Tenure dropped from 2 weeks → 3 working days.</span>
+<span class="a-val">If you joined 3+ days ago, you are eligible to start the cert today.</span>
+
+<span class="a-key">Why it changed:</span> <span class="a-dim">Backlog hit 3 weeks. The old model was built for 40 engineers. There are now 280.</span></div>`;
+
+// ─────────────────────────────────────────
+// MEMORY TREE STATE
+// ─────────────────────────────────────────
+
+const MEM_FILES = {
+  'access/prod-access':  { label: 'prod-access.md', dir: 'access/', state: 'absent' },
+  'people/sre-team':     { label: 'sre-team.md',    dir: 'people/', state: 'absent' },
+  'people/security':     { label: 'security.md',    dir: 'people/', state: 'absent' },
+};
+
+const DOC_FILES = {
+  'onboarding-handbook.md': { state: 'absent' },
+  'access-policy.md':       { state: 'absent' },
+  'team-directory.md':      { state: 'absent' },
+  'policy-update-2026-05-15.md': { state: 'absent' },
+};
+
+// ─────────────────────────────────────────
+// INIT TREE DOM
+// ─────────────────────────────────────────
+function initTree() {
+  const tree = document.getElementById('memTree');
+  tree.innerHTML = '';
+  Object.entries(MEM_FILES).forEach(([key, f]) => {
+    f.state = 'absent';
+    const parts = key.split('/');
+    const dir = parts[0];
+    const name = parts[1];
+    const row = document.createElement('div');
+    row.className = 'tree-row';
+    row.id = 'mem-' + key.replace('/', '-');
+    row.innerHTML = `<span class="tr-icon">·</span><span class="tr-name">${f.dir}${f.label}</span><span class="tr-status" id="ms-${key.replace('/', '-')}"></span>`;
+    row.style.opacity = '0';
+    tree.appendChild(row);
+  });
+  document.getElementById('memEmpty').style.display = 'block';
+  document.getElementById('docSection').style.display = 'none';
+  const docTree = document.getElementById('docTree');
+  docTree.innerHTML = '';
+  Object.entries(DOC_FILES).forEach(([name, f]) => {
+    f.state = 'absent';
+    const row = document.createElement('div');
+    row.className = 'tree-row';
+    row.id = 'doc-' + name.replace('.', '-').replace('.', '-');
+    row.innerHTML = `<span class="tr-icon">·</span><span class="tr-name">${name}</span><span class="tr-status" id="ds-${name.replace(/\./g,'-')}"></span>`;
+    row.style.opacity = '0.3';
+    docTree.appendChild(row);
+  });
+}
+
+// ─────────────────────────────────────────
+// MEMORY OPS
+// ─────────────────────────────────────────
+function setMemState(key, state, label) {
+  const row = document.getElementById('mem-' + key.replace('/', '-'));
+  const status = document.getElementById('ms-' + key.replace('/', '-'));
+  if (!row) return;
+  row.style.opacity = '1';
+  document.getElementById('memEmpty').style.display = 'none';
+  row.className = 'tree-row';
+  if (state === 'read')   { row.classList.add('reading'); status.textContent = 'reading'; }
+  if (state === 'write')  { row.classList.add('writing'); status.textContent = 'writing'; }
+  if (state === 'update') { row.classList.add('updated'); status.textContent = 'updated!'; }
+  if (state === 'done-write') { row.classList.add('done-write'); status.textContent = 'stored ✓'; }
+  if (state === 'done-read')  { row.classList.add('done-read'); status.textContent = ''; }
+}
+
+function setDocState(name, state) {
+  const safeId = 'doc-' + name.replace('.', '-').replace('.', '-');
+  const row = document.getElementById(safeId);
+  const statusId = 'ds-' + name.replace(/\./g, '-');
+  const status = document.getElementById(statusId);
+  if (!row) return;
+  document.getElementById('docSection').style.display = 'block';
+  row.style.opacity = '1';
+  row.className = 'tree-row';
+  if (state === 'reading') { row.classList.add('reading'); if (status) status.textContent = 'ingested'; }
+}
+
+// ─────────────────────────────────────────
+// MAIN RUN
+// ─────────────────────────────────────────
+function switchSession(n) {
+  if (isRunning) return;
+  currentSession = n;
+  document.querySelectorAll('.sess-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.sess) === n);
+  });
+  resetUI();
+}
+
+function resetUI() {
+  animTimers.forEach(clearTimeout);
+  animTimers = [];
+  const scroll = document.getElementById('thinkScroll');
+  scroll.innerHTML = '<div class="think-line t-dim show">// run an agent session to see its thinking</div><div class="think-cursor" id="cursor"></div>';
+  initTree();
+  document.getElementById('answerPane').classList.remove('open');
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('runIcon').textContent = '▶';
+  const st = document.getElementById('runStatus');
+  st.className = 'run-status';
+  st.textContent = 'ready';
+  isRunning = false;
+}
+
+function runAgent() {
+  if (isRunning) return;
+  isRunning = true;
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('runIcon').textContent = '◼';
+  const st = document.getElementById('runStatus');
+  st.className = 'run-status running';
+  st.textContent = 'running session ' + currentSession + '...';
+  initTree();
+
+  const scroll = document.getElementById('thinkScroll');
+  scroll.innerHTML = '<div class="think-cursor show" id="cursor"></div>';
+
+  const lines = currentSession === 1 ? S1_LINES : S2_LINES;
+  const maxMs = lines[lines.length - 1].ms + 800;
+
+  lines.forEach(line => {
+    const t = setTimeout(() => {
+      const cursor = document.getElementById('cursor');
+      const el = document.createElement('div');
+      el.className = 'think-line ' + line.cls;
+      el.textContent = line.text;
+      scroll.insertBefore(el, cursor);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => el.classList.add('show'));
+      });
+      scroll.scrollTop = scroll.scrollHeight;
+
+      // Memory ops
+      if (line.memOp) {
+        const op = line.memOp;
+        const key = op.file + '/' + op.key;
+        if (op.op === 'read')   setMemState(key, 'read');
+        if (op.op === 'write')  setMemState(key, 'write');
+        if (op.op === 'update') setMemState(key, 'update');
+        const finishT = setTimeout(() => {
+          if (op.op === 'read')   setMemState(key, 'done-read');
+          if (op.op === 'write')  setMemState(key, 'done-write');
+          if (op.op === 'update') setMemState(key, 'updated');
+        }, 800);
+        animTimers.push(finishT);
       }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('[data-target]').forEach(el => statIo.observe(el));
 
-  // ── Stamp animation ──
-  const stampIo = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          document.getElementById('stamp').classList.add('animate');
-        }, 700);
-        stampIo.unobserve(e.target);
+      // Doc ops
+      if (line.docOp) {
+        setDocState(line.docOp.file, 'reading');
       }
-    });
-  }, { threshold: 0.5 });
-  stampIo.observe(document.getElementById('stampContainer'));
 
-  // ── Terminal typewriter ──
-  const lines = [
-    { text: '$ python run_session_2.py', cls: 't-cmd', delay: 0 },
-    { text: '', delay: 200 },
-    { text: '  including: policy-update-2026-05-15.md', cls: 't-memory', delay: 300 },
-    { text: '  including: team-directory-update.md', cls: 't-memory', delay: 400 },
-    { text: '', delay: 500 },
-    { text: '--- Agent working ---', cls: 't-cmd', delay: 600 },
-    { text: '', delay: 700 },
-    { text: '  [📝 memory: read  /mnt/memory/access/prod-access.md]', cls: 't-memory', delay: 800 },
-    { text: '  [📝 memory: read  /mnt/memory/people/sre-team.md]', cls: 't-memory', delay: 1000 },
-    { text: '', delay: 1100 },
-    { text: '⚠️  CONTRADICTION DETECTED in /mnt/memory/access/prod-access.md', cls: 't-warn', delay: 1200 },
-    { text: '   Old: Slack + SRE pairing session required', cls: 't-warn', delay: 1400 },
-    { text: '   New: IAM portal, self-paced cert, JIT access', cls: 't-ok', delay: 1600 },
-    { text: '', delay: 1700 },
-    { text: '  [📝 memory: write /mnt/memory/access/prod-access.md]', cls: 't-memory', delay: 1800 },
-    { text: '     Updated: 2026-05-15 policy supersedes Jan 2026', cls: 't-update', delay: 2000 },
-    { text: '', delay: 2100 },
-    { text: '✓  Saved → outputs/session2.txt', cls: 't-ok', delay: 2300 },
-    { text: '   diff outputs/session1.txt outputs/session2.txt', cls: 't-cmd', delay: 2500 },
-  ];
+    }, line.ms);
+    animTimers.push(t);
+  });
 
-  const termBody = document.getElementById('terminalBody');
-  let termStarted = false;
+  // Show answer after all lines done
+  const answerT = setTimeout(() => {
+    const cursor = document.getElementById('cursor');
+    if (cursor) cursor.classList.remove('show');
+    const pane = document.getElementById('answerPane');
+    const body = document.getElementById('answerBody');
+    body.innerHTML = currentSession === 1 ? ANSWER_S1 : ANSWER_S2;
+    pane.classList.add('open');
 
-  const termIo = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting && !termStarted) {
-        termStarted = true;
-        termBody.innerHTML = '';
-        lines.forEach(({ text, cls, delay }) => {
-          setTimeout(() => {
-            const div = document.createElement('div');
-            div.className = cls || '';
-            div.textContent = text;
-            termBody.appendChild(div);
-            termBody.scrollTop = termBody.scrollHeight;
-          }, delay + 400);
-        });
-        termIo.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  termIo.observe(document.getElementById('p3'));
+    sessionsDone[currentSession] = true;
+    isRunning = false;
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('runIcon').textContent = '↺';
+    const st = document.getElementById('runStatus');
+    st.className = 'run-status ' + (currentSession === 1 ? 'done-s1' : 'done-s2');
+    st.textContent = 'session ' + currentSession + ' complete';
+
+    if (sessionsDone[1] && sessionsDone[2]) {
+      document.getElementById('compareSection').classList.add('show');
+      document.getElementById('compareSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, maxMs);
+  animTimers.push(answerT);
+}
+
+// Init on load
+initTree();
 </script>
+</body>
+</html>
